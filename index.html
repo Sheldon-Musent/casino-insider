@@ -14,10 +14,14 @@
   <link rel="stylesheet" href="assets/css/components.css">
   <link rel="icon" type="image/svg+xml" href="/casino-insider/assets/img/favicon.svg">
   <style>
-    /* Video hero */
+    /* ── Video hero ── */
     .hero--video {
       position: relative;
       overflow: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 6rem 0;
     }
     .hero-video {
       position: absolute;
@@ -30,7 +34,7 @@
     .hero-overlay {
       position: absolute;
       inset: 0;
-      background: rgba(0, 0, 0, 0.6);
+      background: rgba(0, 0, 0, 0.65);
       z-index: 1;
     }
     .hero--video .container {
@@ -38,12 +42,43 @@
       z-index: 2;
       color: #fff;
     }
-    .hero--video .hero-label,
-    .hero--video .hero-title,
-    .hero--video .hero-subtitle,
-    .hero--video .hero-meta span,
+
+    /* Top 60%: hero text */
+    .hero--video .hero-text-block {
+      flex: 0 0 auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 4rem 0 5rem;
+    }
+    .hero--video .hero-label {
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 1.2rem;
+    }
+    .hero--video .hero-title {
+      font-size: clamp(2.8rem, 5vw, 4.5rem);
+      line-height: 1.1;
+      color: #fff;
+      margin-bottom: 1.4rem;
+    }
+    .hero--video .hero-subtitle {
+      font-size: 1.2rem;
+      line-height: 1.7;
+      color: rgba(255, 255, 255, 0.85);
+      max-width: 640px;
+      margin-bottom: 1.6rem;
+    }
+    .hero--video .hero-meta span {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    /* Bottom 40%: trending block */
+    .hero--video .trending-block {
+      flex: 0 0 auto;
+      padding-top: 3rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
+    }
     .hero--video .eyebrow-tag,
-    .hero--video .eyebrow-line,
     .hero--video .pick-badge,
     .hero--video .pick-name,
     .hero--video .pick-tagline,
@@ -52,12 +87,22 @@
     .hero--video .stat-label {
       color: #fff;
     }
+    .hero--video .eyebrow-line {
+      border-color: rgba(255, 255, 255, 0.25);
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    /* Full-width trending card */
+    .hero--video .top-pick-card {
+      width: 100%;
+      max-width: 100%;
+    }
 
     /* Trending tabs */
     .trending-tabs {
       display: flex;
       gap: 4px;
-      margin-bottom: 24px;
+      margin-bottom: 28px;
     }
     .trending-tab {
       font-family: var(--font-mono, monospace);
@@ -112,11 +157,11 @@
 <!-- HERO + TRENDING NOW -->
 <section class="hero hero--video top-pick-section" id="picks">
   <video class="hero-video" autoplay muted loop playsinline>
-    <source src="https://cdn.coverr.co/videos/coverr-las-vegas-strip-at-night-1515/1080p.mp4" type="video/mp4">
+    <source src="https://www.w3schools.com/howto/rain.mp4" type="video/mp4">
   </video>
   <div class="hero-overlay"></div>
 
-  <div class="container">
+  <div class="container hero-text-block">
     <p class="hero-label">Updated May 2026</p>
     <h1 class="hero-title">The Best Online Casinos in Malaysia, Tested and Ranked</h1>
     <p class="hero-subtitle">We've spent hundreds of hours testing platforms, slots, and bonuses so you can play with confidence. No sponsored rankings. No BS.</p>
@@ -127,7 +172,7 @@
     </div>
   </div>
 
-  <div class="container">
+  <div class="container trending-block">
     <div class="section-eyebrow">
       <span class="eyebrow-tag">Trending Now</span>
       <div class="eyebrow-line"></div>
