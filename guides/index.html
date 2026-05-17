@@ -19,24 +19,24 @@
 <!-- HEADER -->
 <header class="site-header">
   <div class="header-top">
-    <a href="/" class="logo">Casino<span>Insider</span></a>
+    <a href="/casino-insider/" class="logo">Casino<span>Insider</span></a>
     <nav class="header-nav">
-      <a href="/#picks">Top Picks</a>
-      <a href="/#compare">Compare</a>
-      <a href="/#guides">Guides</a>
-      <a href="/#about">About</a>
-      <a href="/#newsletter" class="header-cta">Free Newsletter</a>
+      <a href="/casino-insider/#picks">Top Picks</a>
+      <a href="/casino-insider/#compare">Compare</a>
+      <a href="/casino-insider/guides/">Guides</a>
+      <a href="/casino-insider/about.html">About</a>
+      <a href="/casino-insider/#newsletter" class="header-cta">Free Newsletter</a>
     </nav>
   </div>
   <div class="category-strip">
     <div class="category-strip-inner">
-      <a href="/">All</a>
-      <a href="/">Online Casinos</a>
-      <a href="/">Slots</a>
-      <a href="/">Live Baccarat</a>
-      <a href="/">Sports Betting</a>
-      <a href="/">Bonuses</a>
-      <a href="/">New Platforms</a>
+      <a href="/casino-insider/">All</a>
+      <a href="/casino-insider/reviews/">Online Casinos</a>
+      <a href="#">Slots</a>
+      <a href="#">Live Baccarat</a>
+      <a href="#">Sports Betting</a>
+      <a href="#">Bonuses</a>
+      <a href="#">New Platforms</a>
     </div>
   </div>
 </header>
@@ -104,6 +104,8 @@
   const empty   = document.getElementById('guides-empty');
   const buttons = document.querySelectorAll('.filter-btn');
 
+  const GUIDE_TYPES = new Set(['How-to Guides', 'Market Reports', 'Comparisons', 'Explainers']);
+
   let allGuides = [];
 
   function escHtml(str) {
@@ -138,7 +140,7 @@
           <p class="card-desc">${escHtml(excerpt)}</p>
           <div class="card-footer">
             ${published ? `<span class="card-rating">${escHtml(formatDate(published))}</span>` : ''}
-            <a href="/guides/${escHtml(slug)}.html" class="card-cta">Read More →</a>
+            <a href="/casino-insider/guides/${escHtml(slug)}.html" class="card-cta">Read More →</a>
           </div>
         </div>
       </div>`;
@@ -167,7 +169,7 @@
   });
 
   async function init() {
-    const { data, error } = await getArticles({ status: 'published', type: 'guide' });
+    const { data, error } = await getArticles({ status: 'published' });
 
     if (error || !data) {
       grid.innerHTML = '<p class="reviews-loading">Failed to load guides. Please try again later.</p>';
@@ -175,7 +177,7 @@
     }
 
     allGuides = data
-      .slice()
+      .filter(a => GUIDE_TYPES.has(a.type))
       .sort((a, b) => new Date(b.published_at || b.created_at || 0) - new Date(a.published_at || a.created_at || 0));
 
     applyFilter('all');
