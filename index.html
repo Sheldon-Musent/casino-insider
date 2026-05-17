@@ -13,6 +13,29 @@
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="assets/css/components.css">
   <link rel="icon" type="image/svg+xml" href="/casino-insider/assets/img/favicon.svg">
+  <style>
+    .trending-tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 24px;
+    }
+    .trending-tab {
+      font-family: var(--font-mono, monospace);
+      font-size: 0.75rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border: 1px solid var(--border);
+      background: none;
+      cursor: pointer;
+      color: var(--mute-2);
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .trending-tab.active {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+  </style>
 </head>
 <body>
 
@@ -21,7 +44,7 @@
   <div class="header-top">
     <a href="/casino-insider/" class="logo">Casino<span>Insider</span></a>
     <nav class="header-nav">
-      <a href="/casino-insider/#picks">Top Picks</a>
+      <a href="/casino-insider/#picks">Trending</a>
       <a href="/casino-insider/#compare">Compare</a>
       <a href="/casino-insider/guides/">Guides</a>
       <a href="/casino-insider/about.html">About</a>
@@ -59,8 +82,15 @@
 <section class="top-pick-section" id="picks">
   <div class="container">
     <div class="section-eyebrow">
-      <span class="eyebrow-tag">Our Top Pick</span>
+      <span class="eyebrow-tag">Trending Now</span>
       <div class="eyebrow-line"></div>
+    </div>
+
+    <div class="trending-tabs">
+      <button class="trending-tab active">Today</button>
+      <button class="trending-tab">Yesterday</button>
+      <button class="trending-tab">This Week</button>
+      <button class="trending-tab">Last Month</button>
     </div>
 
     <div class="top-pick-card">

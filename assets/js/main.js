@@ -23,13 +23,20 @@ async function fetchReviews() {
   return [...data].sort((a, b) => b.rating - a.rating);
 }
 
+// Fetch for trending pick: most recently published first
+async function fetchTrending() {
+  const { data, error } = await getArticles({ type: 'review', status: 'published', limit: 1 });
+  if (error || !data?.length) return [];
+  return [...data].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+}
+
 /**
  * Injects the #1 rated published review into .top-pick-card.
  * Only fields that exist in the schema are written; other elements
  * (badge, tagline, stats) keep their hardcoded fallback content.
  */
 export async function renderTopPick() {
-  const reviews = await fetchReviews();
+  const reviews = await fetchTrending();
   if (!reviews.length) return;
 
   const card = document.querySelector('.top-pick-card');
