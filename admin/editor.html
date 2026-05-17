@@ -126,9 +126,9 @@
   </div>
 
   <script type="module">
+    import { supabase }                              from '../assets/js/supabase.js';
     import { guardPage, logout }                     from '../assets/js/auth.js';
     import { createArticle, updateArticle }          from '../assets/js/cms.js';
-    import { supabase }                              from '../assets/js/supabase.js';
 
     await guardPage();
 
