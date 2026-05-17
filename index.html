@@ -14,6 +14,46 @@
   <link rel="stylesheet" href="assets/css/components.css">
   <link rel="icon" type="image/svg+xml" href="/casino-insider/assets/img/favicon.svg">
   <style>
+    /* Video hero */
+    .hero--video {
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+    }
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 1;
+    }
+    .hero--video .container {
+      position: relative;
+      z-index: 2;
+      color: #fff;
+    }
+    .hero--video .hero-label,
+    .hero--video .hero-title,
+    .hero--video .hero-subtitle,
+    .hero--video .hero-meta span,
+    .hero--video .eyebrow-tag,
+    .hero--video .eyebrow-line,
+    .hero--video .pick-badge,
+    .hero--video .pick-name,
+    .hero--video .pick-tagline,
+    .hero--video .pick-verdict,
+    .hero--video .stat-value,
+    .hero--video .stat-label {
+      color: #fff;
+    }
+
+    /* Trending tabs */
     .trending-tabs {
       display: flex;
       gap: 4px;
@@ -25,15 +65,20 @@
       letter-spacing: 0.04em;
       text-transform: uppercase;
       padding: 6px 14px;
-      border: 1px solid var(--border);
+      border: 1px solid rgba(255, 255, 255, 0.35);
       background: none;
       cursor: pointer;
-      color: var(--mute-2);
+      color: rgba(255, 255, 255, 0.5);
       transition: color 0.15s, border-color 0.15s;
     }
     .trending-tab.active {
-      color: var(--accent);
-      border-color: var(--accent);
+      color: #fff;
+      border-color: #fff;
+    }
+
+    /* Scroll offset for sticky header */
+    #picks {
+      scroll-margin-top: 80px;
     }
   </style>
 </head>
@@ -64,8 +109,13 @@
   </div>
 </header>
 
-<!-- HERO -->
-<section class="hero">
+<!-- HERO + TRENDING NOW -->
+<section class="hero hero--video top-pick-section" id="picks">
+  <video class="hero-video" autoplay muted loop playsinline>
+    <source src="https://cdn.coverr.co/videos/coverr-las-vegas-strip-at-night-1515/1080p.mp4" type="video/mp4">
+  </video>
+  <div class="hero-overlay"></div>
+
   <div class="container">
     <p class="hero-label">Updated May 2026</p>
     <h1 class="hero-title">The Best Online Casinos in Malaysia, Tested and Ranked</h1>
@@ -76,10 +126,7 @@
       <span>Updated monthly</span>
     </div>
   </div>
-</section>
 
-<!-- TOP PICK -->
-<section class="top-pick-section" id="picks">
   <div class="container">
     <div class="section-eyebrow">
       <span class="eyebrow-tag">Trending Now</span>
