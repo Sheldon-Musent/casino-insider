@@ -122,7 +122,25 @@ export async function renderLatestGuides() {
   `).join('');
 }
 
+function initCategoryStrip() {
+  const items = document.querySelectorAll('.cs-item');
+  items.forEach(item => {
+    const btn = item.querySelector('.cs-btn');
+    if (!btn) return;
+    btn.addEventListener('click', e => {
+      const isOpen = item.classList.contains('cs-item--open');
+      items.forEach(i => i.classList.remove('cs-item--open'));
+      if (!isOpen) item.classList.add('cs-item--open');
+      e.stopPropagation();
+    });
+  });
+  document.addEventListener('click', () => {
+    items.forEach(i => i.classList.remove('cs-item--open'));
+  });
+}
+
 renderTopPick();
 renderPicksGrid();
 renderCompareTable();
 renderLatestGuides();
+initCategoryStrip();
