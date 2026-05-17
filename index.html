@@ -97,38 +97,12 @@
       width: 100%;
       max-width: 100%;
       border-radius: 12px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* Radial glow overlay */
-    .hero--video .top-pick-card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.06) 0%, transparent 60%);
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    /* Shine sweep */
-    @keyframes card-shine {
-      0%   { transform: translateX(-120%) skewX(-18deg); opacity: 0; }
-      15%  { opacity: 1; }
-      85%  { opacity: 1; }
-      100% { transform: translateX(220%) skewX(-18deg); opacity: 0; }
-    }
-    .hero--video .top-pick-card::after {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: 0;
-      width: 35%;
-      height: 200%;
-      background: linear-gradient(to right, transparent 0%, rgba(255,255,255,0.07) 50%, transparent 100%);
-      animation: card-shine 4s ease-in-out infinite;
-      pointer-events: none;
-      z-index: 1;
+      box-shadow:
+        0 0 40px 8px rgba(26, 107, 60, 0.25),
+        0 0 80px 20px rgba(255, 255, 255, 0.04),
+        -8px 0 40px 4px rgba(26, 107, 60, 0.15),
+        8px 0 60px 12px rgba(255, 255, 255, 0.06),
+        0 8px 40px 4px rgba(26, 107, 60, 0.1);
     }
 
     /* Trending tabs */
