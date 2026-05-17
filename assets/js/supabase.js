@@ -22,7 +22,14 @@ if (!url || !key) {
   );
 }
 
-export const supabase = createClient(url, key);
+export const supabase = createClient(url, key, {
+  auth: {
+    persistSession:   true,
+    autoRefreshToken: true,
+    storage:          window.localStorage,
+    storageKey:       `sb-${new URL(url).hostname.split('.')[0]}-auth-token`,
+  },
+});
 
 /**
  * Returns the full public URL for a file in a Supabase Storage public bucket.
