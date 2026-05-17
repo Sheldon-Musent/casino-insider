@@ -25,7 +25,7 @@
       <a href="/casino-insider/#compare">Compare</a>
       <a href="/casino-insider/#guides">Guides</a>
       <a href="/casino-insider/#about">About</a>
-      <a href="/casino-insider/#newsletter" class="header-cta">Full Access</a>
+      <button class="header-cta" id="fullAccessBtn">Full Access</button>
     </nav>
   </div>
   <div class="category-strip">
@@ -179,5 +179,29 @@
 </script>
 
 <script type="module" src="../assets/js/main.js"></script>
+
+<!-- FULL ACCESS MODAL -->
+<style>
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9999;align-items:center;justify-content:center}
+  .modal-box{background:var(--bg-2,#1a1a1a);border:1px solid var(--border-2,#333);color:var(--white,#fff);padding:2.5rem;max-width:480px;width:90%;text-align:center}
+  .modal-title{font-family:var(--font-mono,monospace);font-size:1.4rem;margin-bottom:1rem;color:var(--white,#fff)}
+  .modal-text{font-size:.95rem;line-height:1.7;color:rgba(255,255,255,.72);margin-bottom:2rem}
+  .modal-close-btn{font-family:var(--font-mono,monospace);font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;padding:10px 28px;border:1px solid var(--border-2,#444);background:none;color:var(--white,#fff);cursor:pointer;transition:background .15s}
+  .modal-close-btn:hover{background:rgba(255,255,255,.1)}
+</style>
+<div class="modal-overlay" id="fullAccessModal" style="display:none">
+  <div class="modal-box">
+    <h2 class="modal-title">Coming Soon</h2>
+    <p class="modal-text">Full Access is under development. Stay tuned for exclusive insights, operator reports, and member-only content.</p>
+    <button class="modal-close-btn" id="modalCloseBtn">Got it</button>
+  </div>
+</div>
+<script>
+  const modal    = document.getElementById('fullAccessModal');
+  const closeBtn = document.getElementById('modalCloseBtn');
+  document.getElementById('fullAccessBtn').addEventListener('click', () => modal.style.display = 'flex');
+  closeBtn.addEventListener('click', () => modal.style.display = 'none');
+  modal.addEventListener('click', e => { if (e.target === modal) modal.style.display = 'none'; });
+</script>
 </body>
 </html>
