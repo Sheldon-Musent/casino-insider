@@ -96,6 +96,39 @@
     .hero--video .top-pick-card {
       width: 100%;
       max-width: 100%;
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Radial glow overlay */
+    .hero--video .top-pick-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.06) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Shine sweep */
+    @keyframes card-shine {
+      0%   { transform: translateX(-120%) skewX(-18deg); opacity: 0; }
+      15%  { opacity: 1; }
+      85%  { opacity: 1; }
+      100% { transform: translateX(220%) skewX(-18deg); opacity: 0; }
+    }
+    .hero--video .top-pick-card::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: 0;
+      width: 35%;
+      height: 200%;
+      background: linear-gradient(to right, transparent 0%, rgba(255,255,255,0.07) 50%, transparent 100%);
+      animation: card-shine 4s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 1;
     }
 
     /* Trending tabs */
@@ -110,15 +143,16 @@
       letter-spacing: 0.04em;
       text-transform: uppercase;
       padding: 6px 14px;
-      border: 1px solid rgba(255, 255, 255, 0.35);
+      border: 1px solid transparent;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.2);
       background: none;
       cursor: pointer;
       color: rgba(255, 255, 255, 0.5);
       transition: color 0.15s, border-color 0.15s;
     }
     .trending-tab.active {
-      color: #fff;
-      border-color: #fff;
+      color: var(--accent);
+      border-bottom: 2px solid var(--accent);
     }
 
     /* Full Access modal */
@@ -231,15 +265,15 @@
 
   <div class="container trending-block" id="trending">
     <div class="section-eyebrow">
-      <span class="eyebrow-tag">Trending Now</span>
+      <span class="eyebrow-tag">Trending Topic</span>
       <div class="eyebrow-line"></div>
     </div>
 
     <div class="trending-tabs">
-      <button class="trending-tab active">Today</button>
-      <button class="trending-tab">Yesterday</button>
-      <button class="trending-tab">This Week</button>
-      <button class="trending-tab">Last Month</button>
+      <button class="trending-tab active" data-slug="binance-pay-igaming-review">Today</button>
+      <button class="trending-tab" data-slug="pragmatic-play-review">Yesterday</button>
+      <button class="trending-tab" data-slug="evolution-gaming-review">This Week</button>
+      <button class="trending-tab" data-slug="live22-review">Last Month</button>
     </div>
 
     <div class="top-pick-card">
@@ -546,6 +580,33 @@
 </footer>
 
 
+<script type="module">
+  import { getArticleBySlug } from './assets/js/cms.js';
+
+  function applyToCard(r) {
+    const card = document.querySelector('.top-pick-card');
+    if (!card || !r) return;
+    const wrap = card.querySelector('.pick-image-wrap');
+    const name = card.querySelector('.pick-name');
+    const verdict = card.querySelector('.pick-verdict');
+    const tagline = card.querySelector('.pick-tagline');
+    const btn = card.querySelector('.btn-primary');
+    if (wrap)    wrap.textContent    = r.platform_name || r.title || '';
+    if (name)    name.textContent    = r.platform_name || r.title || '';
+    if (tagline) tagline.textContent = r.excerpt        || '';
+    if (verdict) verdict.textContent = r.body           || r.excerpt || '';
+    if (btn)     btn.href            = `/casino-insider/reviews/${r.slug}`;
+  }
+
+  document.querySelectorAll('.trending-tab').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      document.querySelectorAll('.trending-tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const { data } = await getArticleBySlug(btn.dataset.slug);
+      if (data) applyToCard(data);
+    });
+  });
+</script>
 <script type="module" src="assets/js/main.js"></script>
 
 <!-- FULL ACCESS MODAL -->
