@@ -1,1 +1,183 @@
-<!-- reviews/index.html — Casino reviews listing page -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All Casino Reviews — CasinoInsider</title>
+  <meta name="description" content="Every platform we've tested and rated — online casinos, payment gateways, game providers, and whitelabel solutions for Malaysian players.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+  <meta name="supabase-url" content="https://qrexkkajzesayhrglzys.supabase.co">
+  <meta name="supabase-anon-key" content="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFyZXhra2FqemVzYXlocmdsenlzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4OTgyNzQsImV4cCI6MjA5NDQ3NDI3NH0.PHpbmq76nRM4e6yiYvZAlw9Yzqjb60TlHIvUoLdcDVc">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="icon" type="image/svg+xml" href="/casino-insider/assets/img/favicon.svg">
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-top">
+    <a href="/" class="logo">Casino<span>Insider</span></a>
+    <nav class="header-nav">
+      <a href="/#picks">Top Picks</a>
+      <a href="/#compare">Compare</a>
+      <a href="/#guides">Guides</a>
+      <a href="/#about">About</a>
+      <a href="/#newsletter" class="header-cta">Free Newsletter</a>
+    </nav>
+  </div>
+  <div class="category-strip">
+    <div class="category-strip-inner">
+      <a href="/">All</a>
+      <a href="/">Online Casinos</a>
+      <a href="/">Slots</a>
+      <a href="/">Live Baccarat</a>
+      <a href="/">Sports Betting</a>
+      <a href="/">Bonuses</a>
+      <a href="/">New Platforms</a>
+    </div>
+  </div>
+</header>
+
+<!-- PAGE HEADER -->
+<section class="hero hero--compact">
+  <div class="container">
+    <p class="hero-label">Sorted by rating — updated monthly</p>
+    <h1 class="hero-title">All Casino Reviews</h1>
+    <p class="hero-subtitle">Every platform we've tested. No sponsored placements. No filler.</p>
+  </div>
+</section>
+
+<!-- FILTER BAR -->
+<div class="reviews-filter-bar">
+  <div class="container">
+    <div class="filter-buttons">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="Online Casinos">Online Casinos</button>
+      <button class="filter-btn" data-filter="Payment Gateways">Payment Gateways</button>
+      <button class="filter-btn" data-filter="Game Providers">Game Providers</button>
+      <button class="filter-btn" data-filter="Whitelabel">Whitelabel</button>
+    </div>
+  </div>
+</div>
+
+<!-- REVIEWS GRID -->
+<section class="picks-section">
+  <div class="container">
+    <div id="reviews-grid" class="picks-grid">
+      <p class="reviews-loading">Loading reviews…</p>
+    </div>
+    <p id="reviews-empty" class="reviews-empty" hidden>No reviews found.</p>
+  </div>
+</section>
+
+<!-- DISCLAIMER -->
+<div class="disclaimer">
+  <div class="container">
+    <p>CasinoInsider is an independent affiliate site. We may earn a commission when you sign up via our links — this does not affect our rankings. Gambling involves risk. Play responsibly. 18+ only.</p>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-logo">Casino<span>Insider</span></div>
+    <p class="footer-tagline">Honest iGaming reviews for Malaysian players.</p>
+    <div class="footer-links">
+      <a href="#">About</a>
+      <a href="#">How We Test</a>
+      <a href="#">Contact</a>
+      <a href="#">Responsible Gambling</a>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Affiliate Disclosure</a>
+    </div>
+    <p class="footer-copy">© 2026 CasinoInsider. For entertainment purposes. 18+.</p>
+  </div>
+</footer>
+
+<script type="module">
+  import { getArticles } from '../assets/js/cms.js';
+
+  const grid    = document.getElementById('reviews-grid');
+  const empty   = document.getElementById('reviews-empty');
+  const buttons = document.querySelectorAll('.filter-btn');
+
+  let allReviews = [];
+
+  function escHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function renderCard(article) {
+    const rating  = article.rating != null ? Number(article.rating).toFixed(1) : '—';
+    const market  = article.market  || '';
+    const type    = article.type    || '';
+    const excerpt = article.excerpt || article.meta_description || '';
+    const name    = article.title   || article.platform_name   || 'Untitled';
+    const slug    = article.slug    || '';
+
+    return `
+      <div class="pick-card" data-type="${escHtml(type)}">
+        <div class="card-image">${escHtml(name)}</div>
+        <div class="card-body">
+          ${market ? `<p class="card-rank">${escHtml(market)}</p>` : ''}
+          <h3 class="card-name">${escHtml(name)}</h3>
+          ${type ? `<span class="card-tag">${escHtml(type)}</span>` : ''}
+          <p class="card-desc">${escHtml(excerpt)}</p>
+          <div class="card-footer">
+            <span class="card-rating">★ ${escHtml(rating)} / 5</span>
+            <a href="/reviews/${escHtml(slug)}.html" class="card-cta">Full Review →</a>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  function applyFilter(filter) {
+    const visible = filter === 'all'
+      ? allReviews
+      : allReviews.filter(a => (a.type || '') === filter);
+
+    if (visible.length === 0) {
+      grid.innerHTML = '';
+      empty.hidden = false;
+    } else {
+      empty.hidden = true;
+      grid.innerHTML = visible.map(renderCard).join('');
+    }
+  }
+
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      buttons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      applyFilter(btn.dataset.filter);
+    });
+  });
+
+  async function init() {
+    const { data, error } = await getArticles({ status: 'published' });
+
+    if (error || !data) {
+      grid.innerHTML = '<p class="reviews-loading">Failed to load reviews. Please try again later.</p>';
+      return;
+    }
+
+    allReviews = data
+      .slice()
+      .sort((a, b) => (Number(b.rating) || 0) - (Number(a.rating) || 0));
+
+    applyFilter('all');
+  }
+
+  init();
+</script>
+
+<script type="module" src="../assets/js/main.js"></script>
+</body>
+</html>
