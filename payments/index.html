@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payments & Banking — CasinoInsider</title>
+  <meta name="description" content="Deposit and withdrawal methods, fees, and processing times for iGaming platforms.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+  <meta name="supabase-url" content="https://qrexkkajzesayhrglzys.supabase.co">
+  <meta name="supabase-anon-key" content="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFyZXhra2FqemVzYXlocmdsenlzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4OTgyNzQsImV4cCI6MjA5NDQ3NDI3NH0.PHpbmq76nRM4e6yiYvZAlw9Yzqjb60TlHIvUoLdcDVc">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="icon" type="image/svg+xml" href="/casino-insider/assets/img/favicon.svg">
+  <style>
+    .coming-soon{text-align:center;padding:6rem 0}
+    .coming-soon-title{font-size:1.5rem;margin-bottom:.75rem}
+    .coming-soon-text{color:var(--mute-2);margin-bottom:1.5rem}
+    .coming-soon-link{color:var(--accent);text-decoration:none}
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9999;align-items:center;justify-content:center}
+    .modal-box{background:var(--bg-2,#1a1a1a);border:1px solid var(--border-2,#333);color:var(--white,#fff);padding:2.5rem;max-width:480px;width:90%;text-align:center}
+    .modal-title{font-family:var(--font-mono,monospace);font-size:1.4rem;margin-bottom:1rem;color:var(--white,#fff)}
+    .modal-text{font-size:.95rem;line-height:1.7;color:rgba(255,255,255,.72);margin-bottom:2rem}
+    .modal-close-btn{font-family:var(--font-mono,monospace);font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;padding:10px 28px;border:1px solid var(--border-2,#444);background:none;color:var(--white,#fff);cursor:pointer;transition:background .15s}
+    .modal-close-btn:hover{background:rgba(255,255,255,.1)}
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-top">
+    <a href="/casino-insider/" class="logo">Casino<span>Insider</span></a>
+    <nav class="header-nav">
+      <a href="/casino-insider/#trending">Trending</a>
+      <a href="/casino-insider/#compare">Compare</a>
+      <a href="/casino-insider/#guides">Guides</a>
+      <a href="/casino-insider/#about">About</a>
+      <button class="header-cta" id="fullAccessBtn">FULL ACCESS</button>
+    </nav>
+  </div>
+  <div class="category-strip">
+    <div class="category-strip-inner">
+      <a href="/casino-insider/">All</a>
+      <a href="/casino-insider/reviews/">Online Casinos</a>
+      <a href="/casino-insider/slots/">Slots</a>
+      <a href="/casino-insider/baccarat/">Live Baccarat</a>
+      <a href="/casino-insider/sports/">Sports Betting</a>
+      <a href="/casino-insider/bonuses/">Bonuses</a>
+      <a href="/casino-insider/new-platforms/">New Platforms</a>
+    </div>
+  </div>
+</header>
+
+<!-- PAGE HEADER -->
+<section class="hero hero--compact">
+  <div class="container">
+    <p class="hero-label">Payments</p>
+    <h1 class="hero-title">Payments & Banking</h1>
+    <p class="hero-subtitle">Deposit and withdrawal methods, fees, and processing times for iGaming platforms.</p>
+  </div>
+</section>
+
+<!-- GRID -->
+<section class="picks-section">
+  <div class="container">
+    <div id="category-grid" class="picks-grid">
+      <p class="reviews-loading">Loading…</p>
+    </div>
+    <div id="coming-soon" class="coming-soon" hidden>
+      <h2 class="coming-soon-title">Payments & Banking</h2>
+      <p class="coming-soon-text">We are working on this section. Check back soon.</p>
+      <a href="/casino-insider/" class="coming-soon-link">← Back to home</a>
+    </div>
+  </div>
+</section>
+
+<!-- DISCLAIMER -->
+<div class="disclaimer">
+  <div class="container">
+    <p>CasinoInsider is an independent affiliate site. We may earn a commission when you sign up via our links — this does not affect our rankings. Gambling involves risk. Play responsibly. 18+ only.</p>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-logo">Casino<span>Insider</span></div>
+    <p class="footer-tagline">Honest iGaming reviews for Malaysian players.</p>
+    <div class="footer-links">
+      <a href="#">About</a>
+      <a href="#">How We Test</a>
+      <a href="#">Contact</a>
+      <a href="#">Responsible Gambling</a>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Affiliate Disclosure</a>
+    </div>
+    <p class="footer-copy">© 2026 CasinoInsider. For entertainment purposes. 18+.</p>
+  </div>
+</footer>
+
+<!-- FULL ACCESS MODAL -->
+<div class="modal-overlay" id="fullAccessModal" style="display:none">
+  <div class="modal-box">
+    <h2 class="modal-title">Coming Soon</h2>
+    <p class="modal-text">Full Access is under development. Stay tuned for exclusive insights, operator reports, and member-only content.</p>
+    <button class="modal-close-btn" id="modalCloseBtn">Got it</button>
+  </div>
+</div>
+
+<script type="module">
+  import { getArticles } from '../assets/js/cms.js';
+
+  const grid      = document.getElementById('category-grid');
+  const comingSoon = document.getElementById('coming-soon');
+  const TAG       = 'payments';
+
+  function escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function renderCard(a) {
+    const name    = a.title || a.platform_name || 'Untitled';
+    const excerpt = a.excerpt || a.meta_description || '';
+    const market  = a.market || '';
+    const type    = a.type   || '';
+    const slug    = a.slug   || '';
+    const rating  = a.rating != null ? Number(a.rating).toFixed(1) : null;
+    return `
+      <div class="pick-card">
+        <div class="card-image">${escHtml(name)}</div>
+        <div class="card-body">
+          ${market ? `<p class="card-rank">${escHtml(market)}</p>` : ''}
+          <h3 class="card-name">${escHtml(name)}</h3>
+          ${type ? `<span class="card-tag">${escHtml(type)}</span>` : ''}
+          <p class="card-desc">${escHtml(excerpt)}</p>
+          <div class="card-footer">
+            ${rating ? `<span class="card-rating">★ ${escHtml(rating)} / 5</span>` : ''}
+            <a href="/casino-insider/reviews/${escHtml(slug)}.html" class="card-cta">Read More →</a>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  async function init() {
+    const { data, error } = await getArticles({ status: 'published' });
+    if (error || !data) { grid.innerHTML = ''; comingSoon.hidden = false; return; }
+    const articles = data.filter(a => a.main_tag === TAG);
+    if (!articles.length) { grid.innerHTML = ''; comingSoon.hidden = false; return; }
+    grid.innerHTML = articles.map(renderCard).join('');
+  }
+
+  init();
+
+  const modal    = document.getElementById('fullAccessModal');
+  const closeBtn = document.getElementById('modalCloseBtn');
+  document.getElementById('fullAccessBtn').addEventListener('click', () => modal.style.display = 'flex');
+  closeBtn.addEventListener('click', () => modal.style.display = 'none');
+  modal.addEventListener('click', e => { if (e.target === modal) modal.style.display = 'none'; });
+</script>
+
+<script type="module" src="../assets/js/main.js"></script>
+</body>
+</html>
