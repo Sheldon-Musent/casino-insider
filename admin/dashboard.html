@@ -1,1 +1,175 @@
-<!-- admin/dashboard.html — Admin dashboard -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="supabase-url" content="https://qrexkkajzesayhrglzys.supabase.co">
+  <meta name="supabase-anon-key" content="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFyZXhra2FqemVzYXlocmdsenlzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4OTgyNzQsImV4cCI6MjA5NDQ3NDI3NH0.PHpbmq76nRM4e6yiYvZAlw9Yzqjb60TlHIvUoLdcDVc">
+  <title>Dashboard — CasinoInsider MY Admin</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body class="admin-body">
+
+  <div class="admin-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="admin-sidebar">
+      <div class="sidebar-top">
+        <a href="../index.html" class="sidebar-logo">Casino<span>Insider</span></a>
+        <span class="sidebar-label">Admin</span>
+      </div>
+
+      <nav class="admin-nav">
+        <a href="dashboard.html" class="admin-nav-link active">Dashboard</a>
+        <a href="editor.html" class="admin-nav-link">New Article</a>
+        <a href="media.html" class="admin-nav-link">Media</a>
+      </nav>
+
+      <button class="sidebar-logout" id="logoutBtn">Sign out</button>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="admin-main">
+
+      <div class="admin-topbar">
+        <h1 class="admin-page-title">Articles</h1>
+        <a href="editor.html" class="admin-action-btn admin-action-primary">+ New Article</a>
+      </div>
+
+      <!-- STATS -->
+      <div class="stats-strip" id="statsStrip">
+        <div class="stat-card"><span class="stat-num">—</span><span class="stat-lbl">Total</span></div>
+        <div class="stat-card"><span class="stat-num">—</span><span class="stat-lbl">Published</span></div>
+        <div class="stat-card"><span class="stat-num">—</span><span class="stat-lbl">Drafts</span></div>
+      </div>
+
+      <!-- TABLE -->
+      <div class="admin-table-wrap">
+        <table class="articles-table">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Type</th>
+              <th>Status</th>
+              <th>Market</th>
+              <th>Created</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="articlesBody">
+            <tr><td colspan="6" class="table-empty">Loading…</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </main>
+  </div>
+
+  <script type="module">
+    import { guardPage, logout }                      from '../assets/js/auth.js';
+    import { getArticles, deleteArticle,
+             publishArticle, updateArticle }          from '../assets/js/cms.js';
+
+    await guardPage();
+
+    // ── Render ──────────────────────────────────────────────────────────────
+
+    function renderStats(articles) {
+      const total     = articles.length;
+      const published = articles.filter(a => a.status === 'published').length;
+      const drafts    = articles.filter(a => a.status === 'draft').length;
+
+      document.getElementById('statsStrip').innerHTML = `
+        <div class="stat-card"><span class="stat-num">${total}</span><span class="stat-lbl">Total</span></div>
+        <div class="stat-card"><span class="stat-num">${published}</span><span class="stat-lbl">Published</span></div>
+        <div class="stat-card"><span class="stat-num">${drafts}</span><span class="stat-lbl">Drafts</span></div>
+      `;
+    }
+
+    function renderTable(articles) {
+      const tbody = document.getElementById('articlesBody');
+
+      if (!articles.length) {
+        tbody.innerHTML = `<tr><td colspan="6" class="table-empty">No articles yet. <a href="editor.html">Create one →</a></td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = articles.map(a => {
+        const date        = new Date(a.created_at).toLocaleDateString('en-MY', { day: 'numeric', month: 'short', year: 'numeric' });
+        const isPublished = a.status === 'published';
+
+        return `
+          <tr>
+            <td class="col-title">${a.title}</td>
+            <td><span class="type-badge type-${a.type}">${a.type}</span></td>
+            <td><span class="status-badge status-${a.status}">${a.status}</span></td>
+            <td>${a.market ?? '—'}</td>
+            <td class="col-date">${date}</td>
+            <td class="col-actions">
+              <a href="editor.html?id=${a.id}" class="action-btn action-edit">Edit</a>
+              <button class="action-btn action-toggle" data-id="${a.id}" data-status="${a.status}">
+                ${isPublished ? 'Unpublish' : 'Publish'}
+              </button>
+              <button class="action-btn action-delete" data-id="${a.id}">Delete</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // ── Data fetch ──────────────────────────────────────────────────────────
+
+    async function loadDashboard() {
+      const { data, error } = await getArticles({});
+
+      if (error || !data) {
+        document.getElementById('articlesBody').innerHTML =
+          `<tr><td colspan="6" class="table-empty">Failed to load articles.</td></tr>`;
+        return;
+      }
+
+      renderStats(data);
+      renderTable(data);
+    }
+
+    // ── Event delegation for table actions ──────────────────────────────────
+
+    document.getElementById('articlesBody').addEventListener('click', async (e) => {
+      const btn = e.target.closest('button[data-id]');
+      if (!btn) return;
+
+      const id = btn.dataset.id;
+
+      if (btn.classList.contains('action-delete')) {
+        if (!confirm('Delete this article? This cannot be undone.')) return;
+        btn.disabled = true;
+        await deleteArticle(id);
+        loadDashboard();
+        return;
+      }
+
+      if (btn.classList.contains('action-toggle')) {
+        btn.disabled = true;
+        const isPublished = btn.dataset.status === 'published';
+        if (isPublished) {
+          await updateArticle(id, { status: 'draft' });
+        } else {
+          await publishArticle(id);
+        }
+        loadDashboard();
+      }
+    });
+
+    // ── Logout ──────────────────────────────────────────────────────────────
+
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await logout();
+      window.location.replace('index.html');
+    });
+
+    loadDashboard();
+  </script>
+
+</body>
+</html>

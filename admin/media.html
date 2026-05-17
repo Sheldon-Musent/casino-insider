@@ -1,1 +1,209 @@
-<!-- admin/media.html — Media manager -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="supabase-url" content="https://qrexkkajzesayhrglzys.supabase.co">
+  <meta name="supabase-anon-key" content="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFyZXhra2FqemVzYXlocmdsenlzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4OTgyNzQsImV4cCI6MjA5NDQ3NDI3NH0.PHpbmq76nRM4e6yiYvZAlw9Yzqjb60TlHIvUoLdcDVc">
+  <title>Media — CasinoInsider MY Admin</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body class="admin-body">
+
+  <div class="admin-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="admin-sidebar">
+      <div class="sidebar-top">
+        <a href="../index.html" class="sidebar-logo">Casino<span>Insider</span></a>
+        <span class="sidebar-label">Admin</span>
+      </div>
+      <nav class="admin-nav">
+        <a href="dashboard.html" class="admin-nav-link">Dashboard</a>
+        <a href="editor.html" class="admin-nav-link">New Article</a>
+        <a href="media.html" class="admin-nav-link active">Media</a>
+      </nav>
+      <button class="sidebar-logout" id="logoutBtn">Sign out</button>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="admin-main">
+
+      <div class="admin-topbar">
+        <h1 class="admin-page-title">Media</h1>
+      </div>
+
+      <!-- UPLOAD ZONE -->
+      <div class="drop-zone" id="dropZone" role="button" tabindex="0" aria-label="Upload image">
+        <input type="file" id="fileInput" accept="image/*" hidden>
+        <p class="drop-zone-text" id="dropZoneText">Click to upload or drag and drop an image</p>
+        <p class="drop-zone-hint">PNG, JPG, WEBP, GIF — any size</p>
+      </div>
+
+      <!-- FEEDBACK -->
+      <div class="media-feedback" id="feedback" hidden></div>
+
+      <!-- GRID -->
+      <div class="media-grid" id="mediaGrid">
+        <p class="media-empty">Loading…</p>
+      </div>
+
+    </main>
+  </div>
+
+  <script type="module">
+    import { guardPage, logout }       from '../assets/js/auth.js';
+    import { uploadMedia, deleteMedia } from '../assets/js/cms.js';
+    import { supabase, getPublicUrl }  from '../assets/js/supabase.js';
+
+    await guardPage();
+
+    const dropZone    = document.getElementById('dropZone');
+    const dropZoneText = document.getElementById('dropZoneText');
+    const fileInput   = document.getElementById('fileInput');
+    const mediaGrid   = document.getElementById('mediaGrid');
+    const feedback    = document.getElementById('feedback');
+
+    // ── Inline feedback ───────────────────────────────────────────────────
+    let feedbackTimer;
+    function showFeedback(msg, isError = false) {
+      clearTimeout(feedbackTimer);
+      feedback.textContent = msg;
+      feedback.className   = 'media-feedback ' + (isError ? 'is-error' : 'is-ok');
+      feedback.hidden      = false;
+      feedbackTimer = setTimeout(() => { feedback.hidden = true; }, 4000);
+    }
+
+    // ── Load grid ─────────────────────────────────────────────────────────
+    async function loadGrid() {
+      mediaGrid.innerHTML = '<p class="media-empty">Loading…</p>';
+
+      const { data, error } = await supabase.storage
+        .from('media')
+        .list('', { sortBy: { column: 'created_at', order: 'desc' } });
+
+      if (error) {
+        mediaGrid.innerHTML = '<p class="media-empty">Failed to load media.</p>';
+        return;
+      }
+
+      // id is null for folder placeholders — filter to real files only
+      const files = (data ?? []).filter(f => f.id !== null);
+
+      if (!files.length) {
+        mediaGrid.innerHTML = '<p class="media-empty">No media yet. Upload your first image above.</p>';
+        return;
+      }
+
+      mediaGrid.innerHTML = files.map(file => {
+        const url = getPublicUrl('media', file.name);
+        return `
+          <div class="media-thumb">
+            <div class="media-img-wrap">
+              <img src="${url}" alt="${file.name}" loading="lazy">
+            </div>
+            <div class="media-thumb-footer">
+              <span class="media-filename" title="${file.name}">${file.name}</span>
+              <div class="media-thumb-actions">
+                <button class="media-btn copy-btn" data-url="${url}">Copy URL</button>
+                <button class="media-btn delete-btn" data-path="${file.name}">Delete</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ── Upload handler ────────────────────────────────────────────────────
+    async function handleUpload(file) {
+      if (!file.type.startsWith('image/')) {
+        showFeedback('Only image files are supported.', true);
+        return;
+      }
+
+      dropZone.classList.add('uploading');
+      dropZoneText.textContent = `Uploading ${file.name}…`;
+
+      const { error } = await uploadMedia(file);
+
+      dropZone.classList.remove('uploading');
+      dropZoneText.textContent = 'Click to upload or drag and drop an image';
+
+      if (error) {
+        showFeedback(`Upload failed: ${error.message ?? 'Unknown error.'}`, true);
+        return;
+      }
+
+      showFeedback(`${file.name} uploaded successfully.`);
+      loadGrid();
+    }
+
+    // ── Drop zone — click ──────────────────────────────────────────────────
+    dropZone.addEventListener('click', () => fileInput.click());
+    dropZone.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') fileInput.click(); });
+
+    fileInput.addEventListener('change', () => {
+      if (fileInput.files[0]) handleUpload(fileInput.files[0]);
+      fileInput.value = ''; // reset so same filename can be re-uploaded
+    });
+
+    // ── Drop zone — drag and drop ─────────────────────────────────────────
+    dropZone.addEventListener('dragover', e => {
+      e.preventDefault();
+      dropZone.classList.add('drag-over');
+    });
+
+    dropZone.addEventListener('dragleave', e => {
+      // only remove when the pointer leaves the zone entirely, not a child
+      if (!dropZone.contains(e.relatedTarget)) dropZone.classList.remove('drag-over');
+    });
+
+    dropZone.addEventListener('drop', e => {
+      e.preventDefault();
+      dropZone.classList.remove('drag-over');
+      const file = e.dataTransfer.files[0];
+      if (file) handleUpload(file);
+    });
+
+    // ── Grid actions — event delegation ───────────────────────────────────
+    mediaGrid.addEventListener('click', async e => {
+      const copyBtn   = e.target.closest('.copy-btn');
+      const deleteBtn = e.target.closest('.delete-btn');
+
+      if (copyBtn) {
+        try {
+          await navigator.clipboard.writeText(copyBtn.dataset.url);
+          const prev = copyBtn.textContent;
+          copyBtn.textContent = 'Copied!';
+          setTimeout(() => { copyBtn.textContent = prev; }, 2000);
+        } catch {
+          showFeedback('Could not copy to clipboard.', true);
+        }
+        return;
+      }
+
+      if (deleteBtn) {
+        deleteBtn.disabled = true;
+        const { error } = await deleteMedia(deleteBtn.dataset.path);
+        if (error) {
+          showFeedback(`Delete failed: ${error.message ?? 'Unknown error.'}`, true);
+          deleteBtn.disabled = false;
+          return;
+        }
+        showFeedback('File deleted.');
+        loadGrid();
+      }
+    });
+
+    // ── Logout ────────────────────────────────────────────────────────────
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await logout();
+      window.location.replace('index.html');
+    });
+
+    loadGrid();
+  </script>
+
+</body>
+</html>

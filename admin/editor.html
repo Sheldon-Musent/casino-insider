@@ -1,1 +1,312 @@
-<!-- admin/editor.html — Content editor -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="supabase-url" content="https://qrexkkajzesayhrglzys.supabase.co">
+  <meta name="supabase-anon-key" content="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFyZXhra2FqemVzYXlocmdsenlzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4OTgyNzQsImV4cCI6MjA5NDQ3NDI3NH0.PHpbmq76nRM4e6yiYvZAlw9Yzqjb60TlHIvUoLdcDVc">
+  <title>Editor — CasinoInsider MY Admin</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body class="admin-body">
+
+  <div class="admin-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="admin-sidebar">
+      <div class="sidebar-top">
+        <a href="../index.html" class="sidebar-logo">Casino<span>Insider</span></a>
+        <span class="sidebar-label">Admin</span>
+      </div>
+      <nav class="admin-nav">
+        <a href="dashboard.html" class="admin-nav-link">Dashboard</a>
+        <a href="editor.html" class="admin-nav-link active">New Article</a>
+        <a href="media.html" class="admin-nav-link">Media</a>
+      </nav>
+      <button class="sidebar-logout" id="logoutBtn">Sign out</button>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="admin-main">
+
+      <!-- TOPBAR -->
+      <div class="admin-topbar">
+        <div class="editor-topbar-left">
+          <a href="dashboard.html" class="editor-back">← Dashboard</a>
+          <h1 class="admin-page-title" id="pageTitle">New Article</h1>
+        </div>
+        <div class="editor-topbar-right">
+          <span class="save-status" id="saveStatus"></span>
+          <button class="editor-btn editor-btn-save" id="saveBtn">Save draft</button>
+          <button class="editor-btn editor-btn-publish" id="publishBtn">Publish</button>
+        </div>
+      </div>
+
+      <!-- FORM -->
+      <form id="editorForm" novalidate>
+        <div class="editor-grid">
+
+          <!-- LEFT: main content fields -->
+          <div class="editor-left">
+            <div class="editor-panel">
+
+              <div class="editor-field">
+                <label class="editor-label" for="title">Title</label>
+                <input class="editor-input editor-title-input" type="text" id="title" name="title" placeholder="Article title" autocomplete="off">
+              </div>
+
+              <div class="editor-field">
+                <label class="editor-label" for="slug">Slug</label>
+                <input class="editor-input" type="text" id="slug" name="slug" placeholder="auto-generated-from-title" autocomplete="off">
+                <span class="editor-hint">URL: /reviews/slug or /guides/slug</span>
+              </div>
+
+              <div class="editor-field">
+                <label class="editor-label" for="excerpt">Excerpt</label>
+                <textarea class="editor-textarea excerpt-area" id="excerpt" name="excerpt" placeholder="Short summary shown in listings and cards…"></textarea>
+              </div>
+
+              <div class="editor-field">
+                <label class="editor-label" for="content">Content</label>
+                <textarea class="editor-textarea content-area" id="content" name="content" placeholder="Full article content…"></textarea>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- RIGHT: meta fields -->
+          <div class="editor-right">
+            <div class="editor-panel">
+
+              <div class="editor-field">
+                <label class="editor-label" for="type">Type</label>
+                <select class="editor-select" id="type" name="type">
+                  <option value="guide">Guide</option>
+                  <option value="review">Review</option>
+                </select>
+              </div>
+
+              <div class="editor-field">
+                <label class="editor-label" for="market">Market</label>
+                <select class="editor-select" id="market" name="market">
+                  <option value="my">Malaysia (MY)</option>
+                  <option value="global">Global</option>
+                  <option value="sg">Singapore (SG)</option>
+                  <option value="au">Australia (AU)</option>
+                </select>
+              </div>
+
+              <div class="editor-field">
+                <label class="editor-label" for="status">Status</label>
+                <select class="editor-select" id="status" name="status">
+                  <option value="draft">Draft</option>
+                  <option value="published">Published</option>
+                </select>
+              </div>
+
+              <!-- Review-only fields -->
+              <div class="editor-field field-hidden" id="platformGroup">
+                <label class="editor-label" for="platform_name">Platform Name</label>
+                <input class="editor-input" type="text" id="platform_name" name="platform_name" placeholder="e.g. Live22" autocomplete="off">
+              </div>
+
+              <div class="editor-field field-hidden" id="ratingGroup">
+                <label class="editor-label" for="rating">Rating</label>
+                <input class="editor-input" type="number" id="rating" name="rating" min="0" max="5" step="0.1" placeholder="0.0 – 5.0">
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </form>
+
+    </main>
+  </div>
+
+  <script type="module">
+    import { guardPage, logout }                     from '../assets/js/auth.js';
+    import { createArticle, updateArticle }          from '../assets/js/cms.js';
+    import { supabase }                              from '../assets/js/supabase.js';
+
+    await guardPage();
+
+    // ── State ──────────────────────────────────────────────────────────────
+    let articleId  = new URLSearchParams(window.location.search).get('id');
+    let isDirty    = false;
+    let slugEdited = false;
+
+    // ── Element refs ───────────────────────────────────────────────────────
+    const titleInput    = document.getElementById('title');
+    const slugInput     = document.getElementById('slug');
+    const typeSelect    = document.getElementById('type');
+    const marketSelect  = document.getElementById('market');
+    const statusSelect  = document.getElementById('status');
+    const platformInput = document.getElementById('platform_name');
+    const ratingInput   = document.getElementById('rating');
+    const excerptTA     = document.getElementById('excerpt');
+    const contentTA     = document.getElementById('content');
+    const saveBtn       = document.getElementById('saveBtn');
+    const publishBtn    = document.getElementById('publishBtn');
+    const saveStatus    = document.getElementById('saveStatus');
+    const pageTitle     = document.getElementById('pageTitle');
+    const ratingGroup   = document.getElementById('ratingGroup');
+    const platformGroup = document.getElementById('platformGroup');
+
+    // ── Slug generation ────────────────────────────────────────────────────
+    function toSlug(str) {
+      return str.toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .trim()
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-');
+    }
+
+    titleInput.addEventListener('input', () => {
+      if (!slugEdited) slugInput.value = toSlug(titleInput.value);
+      markDirty();
+    });
+
+    slugInput.addEventListener('input', () => {
+      slugEdited = true;
+      markDirty();
+    });
+
+    // ── Review-only field visibility ───────────────────────────────────────
+    function updateTypeVisibility() {
+      const isReview = typeSelect.value === 'review';
+      ratingGroup.classList.toggle('field-hidden', !isReview);
+      platformGroup.classList.toggle('field-hidden', !isReview);
+    }
+
+    typeSelect.addEventListener('change', () => { updateTypeVisibility(); markDirty(); });
+    updateTypeVisibility();
+
+    // ── Dirty tracking ─────────────────────────────────────────────────────
+    function markDirty() {
+      if (isDirty) return;
+      isDirty = true;
+      saveStatus.textContent = 'Unsaved changes';
+      saveStatus.classList.add('unsaved');
+    }
+
+    [marketSelect, statusSelect, platformInput, ratingInput, excerptTA, contentTA]
+      .forEach(el => el.addEventListener('input', markDirty));
+
+    // ── Collect form data ──────────────────────────────────────────────────
+    function getFormData() {
+      const isReview = typeSelect.value === 'review';
+      return {
+        title:         titleInput.value.trim(),
+        slug:          slugInput.value.trim(),
+        type:          typeSelect.value,
+        market:        marketSelect.value,
+        status:        statusSelect.value,
+        platform_name: isReview ? (platformInput.value.trim() || null) : null,
+        rating:        isReview ? (parseFloat(ratingInput.value) || null) : null,
+        excerpt:       excerptTA.value.trim() || null,
+        content:       contentTA.value.trim() || null,
+      };
+    }
+
+    // ── Populate form in edit mode ─────────────────────────────────────────
+    function populateForm(article) {
+      titleInput.value    = article.title         ?? '';
+      slugInput.value     = article.slug          ?? '';
+      typeSelect.value    = article.type          ?? 'guide';
+      marketSelect.value  = article.market        ?? 'my';
+      statusSelect.value  = article.status        ?? 'draft';
+      platformInput.value = article.platform_name ?? '';
+      ratingInput.value   = article.rating        ?? '';
+      excerptTA.value     = article.excerpt       ?? '';
+      contentTA.value     = article.content       ?? '';
+      slugEdited = true; // don't overwrite a loaded slug on title edit
+      updateTypeVisibility();
+    }
+
+    // ── Save ───────────────────────────────────────────────────────────────
+    async function save() {
+      const data = getFormData();
+
+      if (!data.title || !data.slug) {
+        saveStatus.textContent = 'Title and slug are required.';
+        saveStatus.classList.add('unsaved');
+        return false;
+      }
+
+      saveBtn.disabled    = true;
+      publishBtn.disabled = true;
+      saveStatus.textContent = 'Saving…';
+      saveStatus.classList.remove('unsaved');
+
+      let result;
+      if (articleId) {
+        result = await updateArticle(articleId, data);
+      } else {
+        result = await createArticle(data);
+        if (!result.error && result.data?.id) {
+          articleId = result.data.id;
+          const url = new URL(window.location.href);
+          url.searchParams.set('id', articleId);
+          window.history.replaceState({}, '', url);
+          pageTitle.textContent = 'Edit Article';
+        }
+      }
+
+      saveBtn.disabled    = false;
+      publishBtn.disabled = false;
+
+      if (result.error) {
+        saveStatus.textContent = `Error: ${result.error.message ?? 'Save failed.'}`;
+        saveStatus.classList.add('unsaved');
+        return false;
+      }
+
+      isDirty = false;
+      const now = new Date().toLocaleTimeString('en-MY', { hour: '2-digit', minute: '2-digit' });
+      saveStatus.textContent = `Last saved at ${now}`;
+      saveStatus.classList.remove('unsaved');
+      return true;
+    }
+
+    // ── Button handlers ────────────────────────────────────────────────────
+    saveBtn.addEventListener('click', () => save());
+
+    publishBtn.addEventListener('click', async () => {
+      statusSelect.value = 'published';
+      await save();
+    });
+
+    // ── Auto-save every 60 s if dirty ──────────────────────────────────────
+    setInterval(() => { if (isDirty) save(); }, 60_000);
+
+    // ── Logout ─────────────────────────────────────────────────────────────
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await logout();
+      window.location.replace('index.html');
+    });
+
+    // ── Load article in edit mode ──────────────────────────────────────────
+    if (articleId) {
+      pageTitle.textContent = 'Edit Article';
+      saveStatus.textContent = 'Loading…';
+
+      const { data, error } = await supabase
+        .from('articles')
+        .select('*')
+        .eq('id', articleId)
+        .single();
+
+      if (error || !data) {
+        saveStatus.textContent = 'Article not found.';
+        saveStatus.classList.add('unsaved');
+      } else {
+        populateForm(data);
+        saveStatus.textContent = '';
+      }
+    }
+  </script>
+
+</body>
+</html>
