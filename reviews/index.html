@@ -151,10 +151,11 @@
     const excerpt = article.excerpt || article.meta_description || '';
     const name    = article.title   || article.platform_name   || 'Untitled';
     const slug    = article.slug    || '';
+    const coverUrl = article.cover_url || '';
 
     return `
       <div class="pick-card" data-type="${escHtml(type)}">
-        <div class="card-image">${escHtml(name)}</div>
+        <div class="card-image" ${coverUrl ? `style="background-image:url('${coverUrl}');background-size:cover;background-position:center"` : ''}>${coverUrl ? '' : escHtml(name)}</div>
         <div class="card-body">
           ${market ? `<p class="card-rank">${escHtml(market)}</p>` : ''}
           <h3 class="card-name">${escHtml(name)}</h3>

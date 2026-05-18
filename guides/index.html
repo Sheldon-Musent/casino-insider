@@ -158,11 +158,12 @@
     const excerpt   = article.excerpt          || article.meta_description || '';
     const title     = article.title            || 'Untitled';
     const slug      = article.slug             || '';
+    const coverUrl  = article.cover_url        || '';
     const published = article.published_at     || article.created_at || '';
 
     return `
       <div class="pick-card" data-type="${escHtml(type)}">
-        <div class="card-image">${escHtml(title)}</div>
+        <div class="card-image" ${coverUrl ? `style="background-image:url('${coverUrl}');background-size:cover;background-position:center"` : ''}>${coverUrl ? '' : escHtml(title)}</div>
         <div class="card-body">
           ${market ? `<p class="card-rank">${escHtml(market)}</p>` : ''}
           <h3 class="card-name">${escHtml(title)}</h3>

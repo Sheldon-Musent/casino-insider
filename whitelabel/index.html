@@ -152,6 +152,7 @@
 
   function renderCard(a) {
     const name    = a.title || a.platform_name || 'Untitled';
+    const coverUrl = a.cover_url || '';
     const excerpt = a.excerpt || a.meta_description || '';
     const market  = a.market || '';
     const type    = a.type   || '';
@@ -159,7 +160,7 @@
     const rating  = a.rating != null ? Number(a.rating).toFixed(1) : null;
     return `
       <div class="pick-card">
-        <div class="card-image">${escHtml(name)}</div>
+        <div class="card-image" ${coverUrl ? `style="background-image:url('${coverUrl}');background-size:cover;background-position:center"` : ''}>${coverUrl ? '' : escHtml(name)}</div>
         <div class="card-body">
           ${market ? `<p class="card-rank">${escHtml(market)}</p>` : ''}
           <h3 class="card-name">${escHtml(name)}</h3>
