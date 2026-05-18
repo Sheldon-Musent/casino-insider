@@ -278,6 +278,86 @@ a { color: inherit; text-decoration: none; }
   border-color: var(--mute-2);
 }
 
+.cs-search-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 420px;
+  background: var(--bg-2);
+  border: 1px solid var(--border-2);
+  z-index: 500;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+
+.cs-search-rec-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: rgba(255,255,255,0.25);
+  padding: 0.9rem 1rem 0.4rem;
+}
+
+.cs-search-result {
+  display: block;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-2);
+  text-decoration: none;
+  transition: background 0.1s;
+}
+
+.cs-search-result:last-child { border-bottom: none; }
+
+.cs-search-result:hover { background: rgba(255,255,255,0.05); }
+
+.cs-search-result-top {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.cs-search-badge {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 0.15rem 0.4rem;
+}
+
+.cs-search-badge--review {
+  color: var(--accent);
+  background: var(--accent-light);
+}
+
+.cs-search-badge--guide {
+  color: #5B9CF6;
+  background: rgba(91,156,246,0.12);
+}
+
+.cs-search-result-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.88);
+  line-height: 1.3;
+}
+
+.cs-search-result-excerpt {
+  font-size: 11px;
+  color: rgba(255,255,255,0.4);
+  line-height: 1.45;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cs-search-no-results {
+  padding: 1.25rem 1rem;
+  font-size: 12px;
+  color: rgba(255,255,255,0.35);
+  text-align: center;
+}
+
 /* ── LAYOUT ── */
 .container {
   max-width: 1200px;

@@ -2,6 +2,35 @@
 
 import { getArticles } from './cms.js';
 
+// ── SEARCH CACHE ──
+let _articleCache = null;
+
+async function fetchAllPublished() {
+  if (_articleCache) return _articleCache;
+  const { data, error } = await getArticles({ status: 'published', limit: 200 });
+  if (error || !data) return [];
+  _articleCache = data;
+  return _articleCache;
+}
+
+window.ciSearch = async function(term) {
+  const all = await fetchAllPublished();
+  const q = term.trim().toLowerCase();
+  if (!q) return { results: [], recommended: [] };
+
+  const results = all.filter(a => {
+    const hay = `${a.title || ''} ${a.platform_name || ''} ${a.excerpt || ''} ${a.meta_description || ''}`.toLowerCase();
+    return hay.includes(q);
+  }).slice(0, 3);
+
+  const recommended = all
+    .slice()
+    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+    .slice(0, 3);
+
+  return { results, recommended };
+};
+
 // Returns a ✓ / ✗ / ◑ span. Feature-flag columns are not yet in the schema,
 // so callers pass null until those columns are added.
 function featureCell(val) {
@@ -128,6 +157,80 @@ export async function renderLatestGuides() {
   `).join('');
 }
 
+function initSearchBox() {
+  const input = document.querySelector('.cs-search-input');
+  const wrap  = document.querySelector('.cs-search-wrap');
+  if (!input || !wrap) return;
+
+  let dropdown = null;
+  let debounce = null;
+
+  function closeDropdown() {
+    if (dropdown) { dropdown.remove(); dropdown = null; }
+  }
+
+  function badgeHtml(type) {
+    const isGuide = (type || '').toLowerCase() === 'guide';
+    const cls  = isGuide ? 'cs-search-badge--guide' : 'cs-search-badge--review';
+    const label = isGuide ? 'Guide' : 'Review';
+    return `<span class="cs-search-badge ${cls}">${label}</span>`;
+  }
+
+  function resultHtml(a) {
+    const name    = a.title || a.platform_name || 'Untitled';
+    const excerpt = (a.excerpt || a.meta_description || '').slice(0, 80);
+    const slug    = a.slug || '';
+    const url     = `/casino-insider/article.html?slug=${encodeURIComponent(slug)}`;
+    return `
+      <a class="cs-search-result" href="${url}">
+        <div class="cs-search-result-top">
+          ${badgeHtml(a.type)}
+          <span class="cs-search-result-title">${name}</span>
+        </div>
+        ${excerpt ? `<div class="cs-search-result-excerpt">${excerpt}</div>` : ''}
+      </a>`;
+  }
+
+  async function renderDropdown(term) {
+    closeDropdown();
+    const { results, recommended } = await window.ciSearch(term);
+
+    dropdown = document.createElement('div');
+    dropdown.className = 'cs-search-dropdown';
+
+    if (term.trim()) {
+      if (results.length === 0) {
+        dropdown.innerHTML = `<div class="cs-search-no-results">No results for "${term}"</div>`;
+      } else {
+        dropdown.innerHTML = results.map(resultHtml).join('');
+      }
+    } else {
+      dropdown.innerHTML =
+        `<div class="cs-search-rec-label">Recommended</div>` +
+        recommended.map(resultHtml).join('');
+    }
+
+    wrap.appendChild(dropdown);
+  }
+
+  input.addEventListener('input', () => {
+    clearTimeout(debounce);
+    debounce = setTimeout(() => renderDropdown(input.value), 300);
+  });
+
+  input.addEventListener('focus', () => {
+    renderDropdown(input.value);
+  });
+
+  document.addEventListener('click', e => {
+    if (!wrap.contains(e.target)) closeDropdown();
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { closeDropdown(); input.blur(); }
+  });
+}
+
 function initCategoryStrip() {
   const items = document.querySelectorAll('.cs-item');
   items.forEach(item => {
@@ -150,3 +253,4 @@ renderPicksGrid();
 renderCompareTable();
 renderLatestGuides();
 initCategoryStrip();
+initSearchBox();
