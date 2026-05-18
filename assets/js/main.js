@@ -46,7 +46,7 @@ export async function renderTopPick() {
   const imgWrap = card.querySelector('.pick-image-wrap');
   if (r.cover_url) {
     imgWrap.textContent = '';
-    imgWrap.style.cssText = `background-image:url('${r.cover_url}');background-size:cover;background-position:center;background-repeat:no-repeat;`;
+    imgWrap.style.backgroundImage = `url('${r.cover_url}')`;
   } else {
     imgWrap.textContent = r.platform_name;
   }
