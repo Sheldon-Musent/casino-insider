@@ -585,57 +585,50 @@ function inlineMd(text) {
 function parseMarkdown(raw) {
   if (!raw) return '<p>No content available.</p>';
 
-  const blocks = raw.split(/\n{2,}/);
+  const lines = raw.split('\n');
   const out = [];
+  let i = 0;
 
-  for (const block of blocks) {
-    const b = block.trim();
-    if (!b) continue;
+  while (i < lines.length) {
+    const line = lines[i].trim();
 
-    // ### heading
-    if (b.startsWith('### ')) {
-      out.push(`<h3>${inlineMd(esc(b.slice(4).trim()))}</h3>`);
-      continue;
-    }
-    // ## heading
-    if (b.startsWith('## ')) {
-      out.push(`<h2>${inlineMd(esc(b.slice(3).trim()))}</h2>`);
-      continue;
-    }
-    // # heading
-    if (b.startsWith('# ')) {
-      out.push(`<h2>${inlineMd(esc(b.slice(2).trim()))}</h2>`);
-      continue;
+    // blank line — just advance
+    if (!line) { i++; continue; }
+
+    // ### heading (must check before ##)
+    if (line.startsWith('### ')) {
+      out.push(`<h3>${inlineMd(esc(line.slice(4).trim()))}</h3>`);
+      i++; continue;
     }
 
-    // List block: one or more lines starting with - or *
-    const lines = b.split('\n');
-    const listItems = [];
-    const paraLines = [];
+    // ## heading  (# alone also maps to h2)
+    if (line.startsWith('## ') || line.startsWith('# ')) {
+      const text = line.replace(/^#{1,3}\s+/, '');
+      out.push(`<h2>${inlineMd(esc(text))}</h2>`);
+      i++; continue;
+    }
 
-    for (const line of lines) {
-      const t = line.trim();
-      if (/^[-*]\s+/.test(t)) {
-        // flush any pending paragraph lines first
-        if (paraLines.length) {
-          out.push(`<p>${inlineMd(esc(paraLines.join(' ')))}</p>`);
-          paraLines.length = 0;
-        }
-        listItems.push(`<li>${inlineMd(esc(t.replace(/^[-*]\s+/, '')))}</li>`);
-      } else {
-        // flush any pending list items first
-        if (listItems.length) {
-          out.push(`<ul>${listItems.join('')}</ul>`);
-          listItems.length = 0;
-        }
-        if (t) paraLines.push(t);
+    // list item — collect consecutive list lines into one <ul>
+    if (/^[-*]\s+/.test(line)) {
+      const items = [];
+      while (i < lines.length && /^[-*]\s+/.test(lines[i].trim())) {
+        items.push(`<li>${inlineMd(esc(lines[i].trim().replace(/^[-*]\s+/, '')))}</li>`);
+        i++;
       }
+      out.push(`<ul>${items.join('')}</ul>`);
+      continue;
     }
 
-    // flush remaining
-    if (listItems.length) {
-      out.push(`<ul>${listItems.join('')}</ul>`);
-    } else if (paraLines.length) {
+    // paragraph — collect lines until blank line, heading, or list marker
+    const paraLines = [];
+    while (i < lines.length) {
+      const l = lines[i].trim();
+      if (!l) { i++; break; }
+      if (l.startsWith('## ') || l.startsWith('### ') || l.startsWith('# ') || /^[-*]\s+/.test(l)) break;
+      paraLines.push(l);
+      i++;
+    }
+    if (paraLines.length) {
       // single newlines within a paragraph collapse to a space
       out.push(`<p>${inlineMd(esc(paraLines.join(' ')))}</p>`);
     }
