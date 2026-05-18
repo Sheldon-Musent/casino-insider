@@ -67,7 +67,7 @@ export async function renderPicksGrid() {
 
   grid.innerHTML = reviews.slice(0, 3).map((r, i) => `
     <div class="pick-card">
-      <div class="card-image" ${r.cover_url ? `style="background-image:url('${r.cover_url}');background-size:contain;background-repeat:no-repeat;background-position:center;background-color:var(--bg-3,#111)"` : ''}>${r.cover_url ? '' : r.platform_name}</div>
+      <div class="card-image" ${r.cover_url ? `style="background-image:url('${r.cover_url}');background-size:cover;background-repeat:no-repeat;background-position:center;background-color:var(--bg-3,#111)"` : ''}>${r.cover_url ? '' : r.platform_name}</div>
       <div class="card-body">
         <p class="card-rank">#${i + 1}</p>
         <h3 class="card-name">${r.platform_name}</h3>
