@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://sheldon-musent.github.io/casino-insider/sitemap.xml
