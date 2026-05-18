@@ -43,7 +43,13 @@ export async function renderTopPick() {
   if (!card) return;
 
   const r = reviews[0];
-  card.querySelector('.pick-image-wrap').textContent = r.platform_name;
+  const imgWrap = card.querySelector('.pick-image-wrap');
+  if (r.cover_url) {
+    imgWrap.textContent = '';
+    imgWrap.style.cssText = `background-image:url('${r.cover_url}');background-size:contain;background-repeat:no-repeat;background-position:center;background-color:var(--bg-3,#111)`;
+  } else {
+    imgWrap.textContent = r.platform_name;
+  }
   card.querySelector('.pick-name').textContent       = r.platform_name;
   card.querySelector('.pick-verdict').textContent    = r.excerpt ?? '';
   card.querySelector('.btn-primary').href            = `/casino-insider/article.html?slug=${r.slug}`;
@@ -61,7 +67,7 @@ export async function renderPicksGrid() {
 
   grid.innerHTML = reviews.slice(0, 3).map((r, i) => `
     <div class="pick-card">
-      <div class="card-image">${r.platform_name}</div>
+      <div class="card-image" ${r.cover_url ? `style="background-image:url('${r.cover_url}');background-size:contain;background-repeat:no-repeat;background-position:center;background-color:var(--bg-3,#111)"` : ''}>${r.cover_url ? '' : r.platform_name}</div>
       <div class="card-body">
         <p class="card-rank">#${i + 1}</p>
         <h3 class="card-name">${r.platform_name}</h3>
