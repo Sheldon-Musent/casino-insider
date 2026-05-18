@@ -162,34 +162,46 @@
     .rating-platform { font-size: 13px; color: var(--mid); }
 
     /* ── CONTENT BODY ── */
-    .article-content { color: var(--dark); }
+    .article-content {
+      font-size: 17px;
+      line-height: 1.85;
+      color: var(--text, #CCCCCC);
+      max-width: 680px;
+    }
     .article-content h2 {
       font-family: var(--serif);
-      font-size: 1.5rem;
+      font-size: 1.6rem;
       font-weight: 700;
-      color: var(--black);
-      margin: 2.5rem 0 0.75rem;
-      padding-top: 2rem;
-      border-top: 1px solid var(--border);
+      color: var(--white);
+      margin: 2rem 0 0.75rem;
       line-height: 1.2;
       letter-spacing: -0.3px;
     }
-    .article-content h2:first-child { margin-top: 0; padding-top: 0; border-top: none; }
     .article-content h3 {
       font-family: var(--serif);
-      font-size: 1.15rem;
+      font-size: 1.25rem;
       font-weight: 700;
-      color: var(--black);
-      margin: 1.75rem 0 0.5rem;
+      color: var(--white);
+      margin: 1.5rem 0 0.5rem;
     }
     .article-content p {
       font-size: 17px;
       line-height: 1.85;
-      color: var(--dark);
-      margin-bottom: 1.35rem;
+      color: var(--text, #CCCCCC);
+      margin-bottom: 1.5rem;
     }
     .article-content p:last-child { margin-bottom: 0; }
-    .article-content strong { color: var(--black); font-weight: 700; }
+    .article-content ul {
+      margin: 0 0 1.5rem 1.4rem;
+      padding: 0;
+    }
+    .article-content li {
+      font-size: 17px;
+      line-height: 1.85;
+      color: var(--text, #CCCCCC);
+      margin-bottom: 0.4rem;
+    }
+    .article-content strong { font-weight: 700; }
     .article-content em { font-style: italic; }
 
     /* ── SIDEBAR ── */
@@ -564,22 +576,72 @@ function renderStars(n) {
 }
 
 /* ── MARKDOWN PARSER ── */
-function inline(text) {
+function inlineMd(text) {
   return text
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\*(.+?)\*/g, '<em>$1</em>');
+    .replace(/\*([^*\n]+?)\*/g, '<em>$1</em>');
 }
 
-function parseMarkdown(text) {
-  if (!text) return '<p>No content available.</p>';
-  return text.split(/\n\n+/).map(block => {
-    const t = block.trim();
-    if (!t) return '';
-    if (t.startsWith('### ')) return `<h3>${inline(esc(t.slice(4)))}</h3>`;
-    if (t.startsWith('## '))  return `<h2>${inline(esc(t.slice(3)))}</h2>`;
-    if (t.startsWith('# '))   return `<h1>${inline(esc(t.slice(2)))}</h1>`;
-    return `<p>${inline(esc(t).replace(/\n/g,'<br>'))}</p>`;
-  }).join('\n');
+function parseMarkdown(raw) {
+  if (!raw) return '<p>No content available.</p>';
+
+  const blocks = raw.split(/\n{2,}/);
+  const out = [];
+
+  for (const block of blocks) {
+    const b = block.trim();
+    if (!b) continue;
+
+    // ### heading
+    if (b.startsWith('### ')) {
+      out.push(`<h3>${inlineMd(esc(b.slice(4).trim()))}</h3>`);
+      continue;
+    }
+    // ## heading
+    if (b.startsWith('## ')) {
+      out.push(`<h2>${inlineMd(esc(b.slice(3).trim()))}</h2>`);
+      continue;
+    }
+    // # heading
+    if (b.startsWith('# ')) {
+      out.push(`<h2>${inlineMd(esc(b.slice(2).trim()))}</h2>`);
+      continue;
+    }
+
+    // List block: one or more lines starting with - or *
+    const lines = b.split('\n');
+    const listItems = [];
+    const paraLines = [];
+
+    for (const line of lines) {
+      const t = line.trim();
+      if (/^[-*]\s+/.test(t)) {
+        // flush any pending paragraph lines first
+        if (paraLines.length) {
+          out.push(`<p>${inlineMd(esc(paraLines.join(' ')))}</p>`);
+          paraLines.length = 0;
+        }
+        listItems.push(`<li>${inlineMd(esc(t.replace(/^[-*]\s+/, '')))}</li>`);
+      } else {
+        // flush any pending list items first
+        if (listItems.length) {
+          out.push(`<ul>${listItems.join('')}</ul>`);
+          listItems.length = 0;
+        }
+        if (t) paraLines.push(t);
+      }
+    }
+
+    // flush remaining
+    if (listItems.length) {
+      out.push(`<ul>${listItems.join('')}</ul>`);
+    } else if (paraLines.length) {
+      // single newlines within a paragraph collapse to a space
+      out.push(`<p>${inlineMd(esc(paraLines.join(' ')))}</p>`);
+    }
+  }
+
+  return out.join('\n');
 }
 
 /* ── RENDER FUNCTIONS ── */
@@ -630,7 +692,7 @@ function buildMetaBar() {
         </div>
         <div class="meta-bar-right">
           <button class="lang-btn active" id="langEN">EN</button>
-          <button class="lang-btn" id="langZH">ZH</button>
+          <button class="lang-btn" id="langZH">CN</button>
         </div>
       </div>
     </div>`;
