@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="In-depth iGaming reviews and guides for the Asian market.">
   <title>Article — CasinoInsider</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -838,6 +839,7 @@ async function init() {
 
   article = data;
   document.title = `${article.title || 'Article'} — CasinoInsider`;
+  document.querySelector('meta[name="description"]').setAttribute('content', article.excerpt || 'Read our in-depth review and analysis on CasinoInsider — trusted iGaming reviews for the Asian market.');
 
   const [relatedData] = await Promise.all([
     getArticles({ status: 'published' }),
