@@ -46,7 +46,7 @@ export async function renderTopPick() {
   card.querySelector('.pick-image-wrap').textContent = r.platform_name;
   card.querySelector('.pick-name').textContent       = r.platform_name;
   card.querySelector('.pick-verdict').textContent    = r.excerpt ?? '';
-  card.querySelector('.btn-primary').href            = `/reviews/${r.slug}`;
+  card.querySelector('.btn-primary').href            = `/casino-insider/article.html?slug=${r.slug}`;
 }
 
 /**
@@ -68,7 +68,7 @@ export async function renderPicksGrid() {
         <p class="card-desc">${r.excerpt ?? ''}</p>
         <div class="card-footer">
           <span class="card-rating">★ ${r.rating} / 5</span>
-          <a href="/reviews/${r.slug}" class="card-cta">Full Review →</a>
+          <a href="/casino-insider/article.html?slug=${r.slug}" class="card-cta">Full Review →</a>
         </div>
       </div>
     </div>
@@ -97,7 +97,7 @@ export async function renderCompareTable() {
       <td>${featureCell(null)}</td>
       <td>${featureCell(null)}</td>
       <td><strong>${r.rating}</strong></td>
-      <td><a href="/reviews/${r.slug}" class="table-cta">Review →</a></td>
+      <td><a href="/casino-insider/article.html?slug=${r.slug}" class="table-cta">Review →</a></td>
     </tr>
   `).join('');
 }
@@ -115,7 +115,7 @@ export async function renderLatestGuides() {
 
   mainCol.innerHTML = data.map(g => `
     <div class="article-main">
-      <h3 class="article-title"><a href="/guides/${g.slug}">${g.title}</a></h3>
+      <h3 class="article-title"><a href="/casino-insider/article.html?slug=${g.slug}">${g.title}</a></h3>
       <p class="article-excerpt">${g.excerpt ?? ''}</p>
       <p class="article-meta">${formatDate(g.created_at)}</p>
     </div>
