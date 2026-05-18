@@ -841,6 +841,34 @@ async function init() {
   document.title = `${article.title || 'Article'} — CasinoInsider`;
   document.querySelector('meta[name="description"]').setAttribute('content', article.excerpt || 'Read our in-depth review and analysis on CasinoInsider — trusted iGaming reviews for the Asian market.');
 
+  const ldSchema = article.type === 'review'
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'Review',
+        'name': article.title || '',
+        'reviewBody': article.excerpt || '',
+        'reviewRating': {
+          '@type': 'Rating',
+          'ratingValue': article.rating != null ? String(article.rating) : '',
+          'bestRating': '5'
+        },
+        'author': { '@type': 'Organization', 'name': 'CasinoInsider' },
+        'itemReviewed': { '@type': 'Organization', 'name': article.platform_name || article.title || '' }
+      }
+    : {
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+        'headline': article.title || '',
+        'description': article.excerpt || '',
+        'author': { '@type': 'Organization', 'name': 'CasinoInsider' },
+        'datePublished': article.created_at || ''
+      };
+
+  const ldTag = document.createElement('script');
+  ldTag.type = 'application/ld+json';
+  ldTag.textContent = JSON.stringify(ldSchema, null, 2);
+  document.head.appendChild(ldTag);
+
   const [relatedData] = await Promise.all([
     getArticles({ status: 'published' }),
   ]);
