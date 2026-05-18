@@ -646,9 +646,10 @@ function getTitle() {
 }
 
 function buildHero() {
-  const coverStyle = article.cover_url
-    ? `background-image:url('${article.cover_url}');`
-    : '';
+  const bgUrl = article.banner_url || article.cover_url || '';
+  const coverStyle = bgUrl
+    ? `background-image:url('${bgUrl}');`
+    : `background-color:var(--bg-2,#1a1a1a);`;
   const market = article.market || '';
   const type   = article.type   || '';
   const title  = article.title  || '';
