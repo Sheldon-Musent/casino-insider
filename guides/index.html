@@ -170,7 +170,7 @@
           <p class="card-desc">${escHtml(excerpt)}</p>
           <div class="card-footer">
             ${published ? `<span class="card-rating">${escHtml(formatDate(published))}</span>` : ''}
-            <a href="/casino-insider/guides/${escHtml(slug)}.html" class="card-cta">Read More →</a>
+            <a href="/casino-insider/article.html?slug=${escHtml(slug)}" class="card-cta">Read More →</a>
           </div>
         </div>
       </div>`;

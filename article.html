@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Article — CasinoInsider</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+  <meta name="supabase-url" content="https://qrexkkajzesayhrglzys.supabase.co">
+  <meta name="supabase-anon-key" content="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFyZXhra2FqemVzYXlocmdsenlzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4OTgyNzQsImV4cCI6MjA5NDQ3NDI3NH0.PHpbmq76nRM4e6yiYvZAlw9Yzqjb60TlHIvUoLdcDVc">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="icon" type="image/svg+xml" href="/casino-insider/assets/img/favicon.svg">
+  <style>
+    /* ── ARTICLE HERO ── */
+    .article-hero {
+      position: relative;
+      height: 520px;
+      background: #111 center/cover no-repeat;
+      display: flex;
+      align-items: flex-end;
+    }
+    .article-hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 60%, transparent 100%);
+    }
+    .article-hero-content {
+      position: relative;
+      z-index: 1;
+      padding: 2.5rem 2rem;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+    }
+    .article-hero-badges {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.85rem;
+      flex-wrap: wrap;
+    }
+    .article-hero-market {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #fff;
+      background: var(--accent);
+      padding: 0.25rem 0.65rem;
+    }
+    .article-hero-type {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: rgba(255,255,255,0.75);
+      border: 1px solid rgba(255,255,255,0.35);
+      padding: 0.2rem 0.55rem;
+    }
+    .article-hero-title {
+      font-family: var(--serif);
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.15;
+      margin-bottom: 0.75rem;
+      max-width: 820px;
+      letter-spacing: -0.5px;
+    }
+    .article-hero-excerpt {
+      font-size: 16px;
+      color: rgba(255,255,255,0.78);
+      font-style: italic;
+      max-width: 680px;
+      line-height: 1.65;
+    }
+
+    /* ── META BAR ── */
+    .article-meta-bar {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 0.7rem 0;
+    }
+    .meta-bar-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .meta-bar-left {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--mid);
+      flex-wrap: wrap;
+    }
+    .meta-back-link {
+      color: var(--accent);
+      font-weight: 600;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .meta-back-link:hover { color: var(--accent-dark); }
+    .meta-sep { color: var(--border); user-select: none; }
+    .meta-bar-right { display: flex; align-items: center; gap: 0.35rem; }
+    .lang-btn {
+      background: none;
+      border: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--mid);
+      padding: 0.28rem 0.65rem;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+    }
+    .lang-btn.active, .lang-btn:hover {
+      background: var(--black);
+      color: var(--white);
+      border-color: var(--black);
+    }
+
+    /* ── ARTICLE LAYOUT ── */
+    .article-body-section { padding: 3rem 0 2rem; }
+    .article-layout {
+      display: grid;
+      grid-template-columns: 65fr 35fr;
+      gap: 3.5rem;
+      align-items: start;
+    }
+
+    /* ── RATING BLOCK ── */
+    .article-rating-block {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      margin-bottom: 2.5rem;
+    }
+    .rating-score {
+      font-family: var(--serif);
+      font-size: 3.5rem;
+      font-weight: 900;
+      color: var(--accent);
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .rating-stars { font-size: 1.2rem; color: var(--accent); letter-spacing: 3px; margin-bottom: 0.3rem; }
+    .rating-platform { font-size: 13px; color: var(--mid); }
+
+    /* ── CONTENT BODY ── */
+    .article-content { color: var(--dark); }
+    .article-content h2 {
+      font-family: var(--serif);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--black);
+      margin: 2.5rem 0 0.75rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      line-height: 1.2;
+      letter-spacing: -0.3px;
+    }
+    .article-content h2:first-child { margin-top: 0; padding-top: 0; border-top: none; }
+    .article-content h3 {
+      font-family: var(--serif);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--black);
+      margin: 1.75rem 0 0.5rem;
+    }
+    .article-content p {
+      font-size: 17px;
+      line-height: 1.85;
+      color: var(--dark);
+      margin-bottom: 1.35rem;
+    }
+    .article-content p:last-child { margin-bottom: 0; }
+    .article-content strong { color: var(--black); font-weight: 700; }
+    .article-content em { font-style: italic; }
+
+    /* ── SIDEBAR ── */
+    .article-sidebar { position: sticky; top: 120px; }
+    .sidebar-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      padding: 1.35rem;
+      margin-bottom: 1.25rem;
+    }
+    .sidebar-card-title {
+      font-family: var(--serif);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--black);
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 2px solid var(--black);
+    }
+    .sidebar-excerpt {
+      font-size: 13px;
+      color: var(--mid);
+      line-height: 1.65;
+      margin-bottom: 1rem;
+    }
+    .sidebar-rating-pill {
+      display: inline-block;
+      background: var(--accent);
+      color: var(--white);
+      font-size: 13px;
+      font-weight: 700;
+      padding: 0.3rem 0.9rem;
+    }
+    .platform-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.45rem 0;
+      font-size: 13px;
+      border-bottom: 1px solid var(--border);
+    }
+    .platform-row:last-child { border-bottom: none; }
+    .platform-row-label { color: var(--light); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .platform-row-val { color: var(--dark); font-weight: 600; }
+    .status-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 0.2rem 0.5rem;
+      background: var(--accent-light);
+      color: var(--accent-dark);
+      border: 1px solid var(--accent);
+    }
+    .share-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      width: 100%;
+      padding: 0.55rem 0.75rem;
+      border: 1px solid var(--border);
+      background: none;
+      font-size: 12px;
+      font-weight: 600;
+      font-family: var(--sans);
+      color: var(--dark);
+      cursor: pointer;
+      transition: background 0.15s;
+      text-align: left;
+      margin-bottom: 0.5rem;
+      text-decoration: none;
+    }
+    .share-btn:last-child { margin-bottom: 0; }
+    .share-btn:hover { background: var(--bg); }
+
+    /* ── COMMENTS ── */
+    .comments-section {
+      padding: 3rem 0;
+      border-top: 1px solid var(--border);
+    }
+    .comments-title {
+      font-family: var(--serif);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--black);
+      margin-bottom: 1.75rem;
+      letter-spacing: -0.3px;
+    }
+    .comments-empty { font-size: 14px; color: var(--light); padding: 1rem 0; }
+    .comment-card {
+      border: 1px solid var(--border);
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+      background: var(--white);
+    }
+    .comment-header {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      margin-bottom: 0.6rem;
+      flex-wrap: wrap;
+    }
+    .comment-flag { font-size: 1.1rem; line-height: 1; }
+    .comment-name { font-weight: 700; font-size: 14px; color: var(--black); }
+    .comment-stars { color: var(--accent); font-size: 13px; letter-spacing: 1px; }
+    .comment-date { font-size: 11px; color: var(--light); margin-left: auto; }
+    .comment-text { font-size: 14px; color: var(--dark); line-height: 1.65; margin-bottom: 0.75rem; }
+    .comment-actions { display: flex; gap: 0.75rem; }
+    .comment-vote-btn {
+      background: none;
+      border: 1px solid var(--border);
+      font-size: 11px;
+      color: var(--mid);
+      padding: 0.25rem 0.7rem;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .comment-vote-btn:hover { background: var(--bg); }
+    .comment-vote-btn:disabled { opacity: 0.5; cursor: default; }
+
+    /* Comment form */
+    .comment-form-section {
+      margin-top: 2.5rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+    .comment-form-title {
+      font-family: var(--serif);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--black);
+      margin-bottom: 1.25rem;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .form-group { display: flex; flex-direction: column; gap: 0.35rem; }
+    .form-group-full { grid-column: 1 / -1; }
+    .form-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--mid);
+    }
+    .form-input, .form-select, .form-textarea {
+      border: 1px solid var(--border);
+      padding: 0.65rem 0.85rem;
+      font-size: 14px;
+      font-family: var(--sans);
+      color: var(--dark);
+      background: var(--white);
+      outline: none;
+      transition: border-color 0.15s;
+      width: 100%;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--accent); }
+    .form-textarea { resize: vertical; min-height: 110px; }
+    .star-selector { display: flex; gap: 0.3rem; margin-top: 0.25rem; }
+    .star-opt {
+      font-size: 1.35rem;
+      color: #ddd;
+      cursor: pointer;
+      transition: color 0.1s;
+      line-height: 1;
+      user-select: none;
+    }
+    .star-opt.lit { color: var(--accent); }
+    .form-submit {
+      background: var(--black);
+      color: var(--white);
+      border: none;
+      padding: 0.75rem 2.25rem;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: background 0.15s;
+      margin-top: 0.75rem;
+    }
+    .form-submit:hover { background: var(--accent); }
+    .form-submit:disabled { opacity: 0.6; cursor: default; }
+    .form-msg { font-size: 13px; color: var(--accent); margin-top: 0.5rem; min-height: 1.2em; }
+
+    /* ── RELATED ── */
+    .related-section {
+      padding: 3rem 0;
+      border-top: 1px solid var(--border);
+    }
+    .related-title {
+      font-family: var(--serif);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--black);
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.3px;
+    }
+
+    /* ── ERROR STATE ── */
+    .article-error {
+      text-align: center;
+      padding: 7rem 0;
+    }
+    .article-error h2 {
+      font-family: var(--serif);
+      font-size: 1.75rem;
+      color: var(--black);
+      margin-bottom: 0.75rem;
+    }
+    .article-error p { color: var(--mid); margin-bottom: 1.5rem; }
+    .article-error a { color: var(--accent); text-decoration: underline; }
+
+    /* Loading */
+    .article-loading {
+      text-align: center;
+      padding: 6rem 0;
+      color: var(--light);
+      font-size: 14px;
+    }
+
+    /* Modal */
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9999;align-items:center;justify-content:center}
+    .modal-box{background:var(--bg-2,#1a1a1a);border:1px solid var(--border-2,#333);color:var(--white,#fff);padding:2.5rem;max-width:480px;width:90%;text-align:center}
+    .modal-title{font-family:var(--font-mono,monospace);font-size:1.4rem;margin-bottom:1rem;color:var(--white,#fff)}
+    .modal-text{font-size:.95rem;line-height:1.7;color:rgba(255,255,255,.72);margin-bottom:2rem}
+    .modal-close-btn{font-family:var(--font-mono,monospace);font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;padding:10px 28px;border:1px solid var(--border-2,#444);background:none;color:var(--white,#fff);cursor:pointer;transition:background .15s}
+    .modal-close-btn:hover{background:rgba(255,255,255,.1)}
+
+    /* ── MOBILE ── */
+    @media (max-width: 900px) {
+      .article-hero { height: 360px; }
+      .article-layout { grid-template-columns: 1fr; gap: 2rem; }
+      .article-sidebar { position: static; }
+      .form-row { grid-template-columns: 1fr; }
+      .meta-bar-inner { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-top">
+    <a href="/casino-insider/" class="logo">Casino<span>Insider</span></a>
+    <nav class="header-nav">
+      <a href="/casino-insider/#trending">Trending</a>
+      <a href="/casino-insider/#compare">Compare</a>
+      <a href="/casino-insider/#guides">Guides</a>
+      <a href="/casino-insider/#about">About</a>
+      <button class="header-cta" id="fullAccessBtn">FULL ACCESS</button>
+    </nav>
+  </div>
+  <div class="category-strip">
+    <div class="category-strip-inner">
+      <div class="cs-item">
+        <button class="cs-btn">ALL TOPICS <span class="cs-caret">▾</span></button>
+        <div class="cs-dropdown cs-dropdown--wide">
+          <div class="cs-dropdown-body">
+            <div class="cs-group">
+              <p class="cs-group-label">Player</p>
+              <a href="/casino-insider/slots/" class="cs-link">◈ Slots</a>
+              <a href="/casino-insider/baccarat/" class="cs-link">♦ Baccarat</a>
+              <a href="/casino-insider/sports/" class="cs-link">◉ Sports</a>
+              <a href="/casino-insider/poker/" class="cs-link">♠ Poker</a>
+              <a href="/casino-insider/bonuses/" class="cs-link">★ Bonuses</a>
+              <a href="/casino-insider/new-platforms/" class="cs-link">▲ New Platforms</a>
+            </div>
+            <div class="cs-group">
+              <p class="cs-group-label">Operator / B2B</p>
+              <a href="/casino-insider/payments/" class="cs-link">▣ Payment Gateways</a>
+              <a href="/casino-insider/game-providers/" class="cs-link">◆ Game Providers</a>
+              <a href="/casino-insider/whitelabel/" class="cs-link">⬡ Whitelabel &amp; Turnkey</a>
+              <a href="/casino-insider/market-reports/" class="cs-link">▤ Market Reports</a>
+              <a href="/casino-insider/regulation/" class="cs-link">⚖ Regulation</a>
+            </div>
+          </div>
+          <div class="cs-dropdown-footer">More categories coming soon</div>
+        </div>
+      </div>
+      <a href="/casino-insider/slots/" class="cs-btn">Slots</a>
+      <a href="/casino-insider/baccarat/" class="cs-btn">Baccarat</a>
+      <a href="/casino-insider/sports/" class="cs-btn">Sports</a>
+      <a href="/casino-insider/poker/" class="cs-btn">Poker</a>
+      <a href="/casino-insider/bonuses/" class="cs-btn">Bonuses</a>
+      <a href="/casino-insider/new-platforms/" class="cs-btn">New Platforms</a>
+      <div class="cs-search">
+        <div class="cs-search-wrap">
+          <span class="cs-search-icon">⌕</span>
+          <input class="cs-search-input" type="search" placeholder="Search..." autocomplete="off">
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- DYNAMIC ARTICLE CONTENT -->
+<div id="articleRoot">
+  <div class="container article-loading">Loading…</div>
+</div>
+
+<!-- DISCLAIMER -->
+<div class="disclaimer">
+  <div class="container">
+    <p>CasinoInsider is an independent affiliate site. We may earn a commission when you sign up via our links — this does not affect our rankings. Gambling involves risk. Play responsibly. 18+ only.</p>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-logo">Casino<span>Insider</span></div>
+    <p class="footer-tagline">Honest iGaming reviews for the Asian market.</p>
+    <div class="footer-links">
+      <a href="#">About</a>
+      <a href="#">How We Test</a>
+      <a href="#">Contact</a>
+      <a href="#">Responsible Gambling</a>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Affiliate Disclosure</a>
+    </div>
+    <p class="footer-copy">© 2026 CasinoInsider. For entertainment purposes. 18+.</p>
+  </div>
+</footer>
+
+<!-- FULL ACCESS MODAL -->
+<div class="modal-overlay" id="fullAccessModal" style="display:none">
+  <div class="modal-box">
+    <h2 class="modal-title">Coming Soon</h2>
+    <p class="modal-text">Full Access is under development. Stay tuned for exclusive insights, operator reports, and member-only content.</p>
+    <button class="modal-close-btn" id="modalCloseBtn">Got it</button>
+  </div>
+</div>
+
+<script type="module">
+import { getArticleBySlug, getArticles } from './assets/js/cms.js';
+import { supabase } from './assets/js/supabase.js';
+
+const COMMENTS_TABLE = 'comments';
+const FLAGS = {
+  'Malaysia':'🇲🇾','Singapore':'🇸🇬','Philippines':'🇵🇭','Indonesia':'🇮🇩',
+  'Thailand':'🇹🇭','India':'🇮🇳','Australia':'🇦🇺','Other':'🌐'
+};
+
+let article = null;
+let currentLang = 'en';
+let selectedRating = 0;
+
+/* ── UTILS ── */
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function formatDate(iso) {
+  if (!iso) return '';
+  return new Date(iso).toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
+}
+
+function readTime(text) {
+  if (!text) return '1 min read';
+  const mins = Math.max(1, Math.round(text.trim().split(/\s+/).length / 200));
+  return `${mins} min read`;
+}
+
+function renderStars(n) {
+  const f = Math.round(Number(n));
+  return '★'.repeat(Math.min(f, 5)) + '☆'.repeat(Math.max(0, 5 - f));
+}
+
+/* ── MARKDOWN PARSER ── */
+function inline(text) {
+  return text
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>');
+}
+
+function parseMarkdown(text) {
+  if (!text) return '<p>No content available.</p>';
+  return text.split(/\n\n+/).map(block => {
+    const t = block.trim();
+    if (!t) return '';
+    if (t.startsWith('### ')) return `<h3>${inline(esc(t.slice(4)))}</h3>`;
+    if (t.startsWith('## '))  return `<h2>${inline(esc(t.slice(3)))}</h2>`;
+    if (t.startsWith('# '))   return `<h1>${inline(esc(t.slice(2)))}</h1>`;
+    return `<p>${inline(esc(t).replace(/\n/g,'<br>'))}</p>`;
+  }).join('\n');
+}
+
+/* ── RENDER FUNCTIONS ── */
+function getContent() {
+  return currentLang === 'zh' && article.content_zh ? article.content_zh : (article.content || '');
+}
+function getTitle() {
+  return currentLang === 'zh' && article.title_zh ? article.title_zh : (article.title || '');
+}
+
+function buildHero() {
+  const coverStyle = article.cover_url
+    ? `background-image:url('${article.cover_url}');`
+    : '';
+  const market = article.market || '';
+  const type   = article.type   || '';
+  const title  = article.title  || '';
+  const excerpt = article.excerpt || article.meta_description || '';
+  return `
+    <section class="article-hero" style="${coverStyle}">
+      <div class="article-hero-overlay"></div>
+      <div class="article-hero-content">
+        <div class="article-hero-badges">
+          ${market ? `<span class="article-hero-market">${esc(market)}</span>` : ''}
+          ${type   ? `<span class="article-hero-type">${esc(type)}</span>`   : ''}
+        </div>
+        <h1 class="article-hero-title" id="heroTitle">${esc(title)}</h1>
+        ${excerpt ? `<p class="article-hero-excerpt">${esc(excerpt)}</p>` : ''}
+      </div>
+    </section>`;
+}
+
+function buildMetaBar() {
+  const isReview  = article.type === 'review';
+  const backHref  = isReview ? '/casino-insider/reviews/' : '/casino-insider/guides/';
+  const backLabel = isReview ? '← All Reviews' : '← All Guides';
+  const platform  = article.platform_name || article.title || '';
+  const date      = formatDate(article.created_at);
+  const rt        = readTime(article.content);
+  return `
+    <div class="article-meta-bar">
+      <div class="meta-bar-inner">
+        <div class="meta-bar-left">
+          <a href="${backHref}" class="meta-back-link">${backLabel}</a>
+          ${platform ? `<span class="meta-sep">·</span><span>${esc(platform)}</span>` : ''}
+          ${date     ? `<span class="meta-sep">·</span><span>${date}</span>`          : ''}
+          <span class="meta-sep">·</span><span>${rt}</span>
+        </div>
+        <div class="meta-bar-right">
+          <button class="lang-btn active" id="langEN">EN</button>
+          <button class="lang-btn" id="langZH">ZH</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function buildRatingBlock() {
+  if (article.rating == null) return '';
+  const score = Number(article.rating).toFixed(1);
+  const platform = article.platform_name || article.title || '';
+  return `
+    <div class="article-rating-block">
+      <div class="rating-score">${esc(score)}</div>
+      <div>
+        <div class="rating-stars">${renderStars(article.rating)}</div>
+        <div class="rating-platform">${esc(platform)}</div>
+      </div>
+    </div>`;
+}
+
+function buildSidebar() {
+  const excerpt = article.excerpt || article.meta_description || '';
+  const ratingPill = article.rating != null
+    ? `<div class="sidebar-rating-pill">★ ${Number(article.rating).toFixed(1)} / 5</div>`
+    : '';
+
+  let platformCard = '';
+  if (article.type === 'review') {
+    const rows = [
+      article.platform_name ? `<div class="platform-row"><span class="platform-row-label">Platform</span><span class="platform-row-val">${esc(article.platform_name)}</span></div>` : '',
+      article.market        ? `<div class="platform-row"><span class="platform-row-label">Market</span><span class="platform-row-val">${esc(article.market)}</span></div>` : '',
+      article.status        ? `<div class="platform-row"><span class="platform-row-label">Status</span><span class="platform-row-val"><span class="status-badge">${esc(article.status)}</span></span></div>` : '',
+    ].join('');
+    if (rows) {
+      platformCard = `
+        <div class="sidebar-card">
+          <h3 class="sidebar-card-title">Platform Info</h3>
+          ${rows}
+        </div>`;
+    }
+  }
+
+  const twitterText = encodeURIComponent(`${article.title || ''} — CasinoInsider`);
+  const twitterUrl  = encodeURIComponent(window.location.href);
+
+  return `
+    <aside class="article-sidebar">
+      <div class="sidebar-card">
+        <h3 class="sidebar-card-title">Our Verdict</h3>
+        ${excerpt ? `<p class="sidebar-excerpt">${esc(excerpt)}</p>` : ''}
+        ${ratingPill}
+      </div>
+      ${platformCard}
+      <div class="sidebar-card">
+        <h3 class="sidebar-card-title">Share</h3>
+        <button class="share-btn" id="copyUrlBtn">⎘ Copy Link</button>
+        <a class="share-btn" href="https://twitter.com/intent/tweet?text=${twitterText}&url=${twitterUrl}" target="_blank" rel="noopener">𝕏 Share on X</a>
+      </div>
+    </aside>`;
+}
+
+function buildCommentCard(c) {
+  const flag  = FLAGS[c.country] || '🌐';
+  const stars = c.rating ? renderStars(c.rating) : '';
+  return `
+    <div class="comment-card">
+      <div class="comment-header">
+        <span class="comment-flag">${flag}</span>
+        <span class="comment-name">${esc(c.name || 'Anonymous')}</span>
+        ${stars ? `<span class="comment-stars">${stars}</span>` : ''}
+        <span class="comment-date">${formatDate(c.created_at)}</span>
+      </div>
+      <p class="comment-text">${esc(c.comment || '')}</p>
+      <div class="comment-actions">
+        <button class="comment-vote-btn" data-id="${c.id}" data-field="likes">👍 ${c.likes || 0}</button>
+        <button class="comment-vote-btn" data-id="${c.id}" data-field="dislikes">👎 ${c.dislikes || 0}</button>
+      </div>
+    </div>`;
+}
+
+function buildCommentForm() {
+  const countryOptions = ['Malaysia','Singapore','Philippines','Indonesia','Thailand','India','Australia','Other']
+    .map(c => `<option value="${c}">${c}</option>`).join('');
+  return `
+    <div class="comment-form-section">
+      <h3 class="comment-form-title">Leave a Comment</h3>
+      <form id="commentForm" novalidate>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="commentName">Name *</label>
+            <input class="form-input" id="commentName" name="commentName" type="text" placeholder="Your name" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="commentCountry">Country</label>
+            <select class="form-select" id="commentCountry" name="commentCountry">
+              ${countryOptions}
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Your Rating</label>
+            <div class="star-selector" id="starSelector">
+              <span class="star-opt" data-val="1">★</span>
+              <span class="star-opt" data-val="2">★</span>
+              <span class="star-opt" data-val="3">★</span>
+              <span class="star-opt" data-val="4">★</span>
+              <span class="star-opt" data-val="5">★</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom:1rem">
+          <label class="form-label" for="commentText">Comment *</label>
+          <textarea class="form-textarea" id="commentText" name="commentText" placeholder="Share your experience…" required></textarea>
+        </div>
+        <button type="submit" class="form-submit">Submit Comment</button>
+        <p class="form-msg" id="formMsg"></p>
+      </form>
+    </div>`;
+}
+
+function buildRelatedCard(a) {
+  const name    = a.title || a.platform_name || 'Untitled';
+  const excerpt = a.excerpt || a.meta_description || '';
+  const slug    = a.slug || '';
+  const rating  = a.rating != null ? Number(a.rating).toFixed(1) : null;
+  return `
+    <div class="pick-card">
+      <div class="card-image">${esc(name)}</div>
+      <div class="card-body">
+        ${a.market ? `<p class="card-rank">${esc(a.market)}</p>` : ''}
+        <h3 class="card-name">${esc(name)}</h3>
+        ${a.type ? `<span class="card-tag">${esc(a.type)}</span>` : ''}
+        <p class="card-desc">${esc(excerpt)}</p>
+        <div class="card-footer">
+          ${rating ? `<span class="card-rating">★ ${rating} / 5</span>` : ''}
+          <a href="/casino-insider/article.html?slug=${esc(slug)}" class="card-cta">Read More →</a>
+        </div>
+      </div>
+    </div>`;
+}
+
+/* ── INIT ── */
+async function init() {
+  const slug = new URLSearchParams(window.location.search).get('slug');
+  if (!slug) { showError(); return; }
+
+  const { data, error } = await getArticleBySlug(slug);
+  if (error || !data) { showError(); return; }
+
+  article = data;
+  document.title = `${article.title || 'Article'} — CasinoInsider`;
+
+  const [relatedData] = await Promise.all([
+    getArticles({ status: 'published' }),
+  ]);
+  const related = (relatedData.data || [])
+    .filter(a => a.type === article.type && a.slug !== article.slug)
+    .slice(0, 3);
+
+  const { data: comments } = await supabase
+    .from(COMMENTS_TABLE)
+    .select('*')
+    .eq('article_id', article.id)
+    .order('created_at', { ascending: false });
+
+  const commentListHtml = (comments && comments.length)
+    ? comments.map(buildCommentCard).join('')
+    : `<p class="comments-empty">Be the first to leave a comment.</p>`;
+
+  const relatedTitle = article.type === 'guide' ? 'Related Guides' : 'Related Reviews';
+
+  document.getElementById('articleRoot').innerHTML = `
+    ${buildHero()}
+    ${buildMetaBar()}
+
+    <section class="article-body-section">
+      <div class="container">
+        <div class="article-layout">
+          <div class="article-main">
+            ${buildRatingBlock()}
+            <div class="article-content" id="articleContent">${parseMarkdown(getContent())}</div>
+          </div>
+          ${buildSidebar()}
+        </div>
+      </div>
+    </section>
+
+    <section class="comments-section">
+      <div class="container">
+        <h2 class="comments-title">Reader Comments</h2>
+        <div id="commentsList">${commentListHtml}</div>
+        ${buildCommentForm()}
+      </div>
+    </section>
+
+    ${related.length ? `
+    <section class="related-section">
+      <div class="container">
+        <h2 class="related-title">${relatedTitle}</h2>
+        <div class="picks-grid">${related.map(buildRelatedCard).join('')}</div>
+      </div>
+    </section>` : ''}`;
+
+  bindEvents(comments || []);
+}
+
+function showError() {
+  document.getElementById('articleRoot').innerHTML = `
+    <div class="container">
+      <div class="article-error">
+        <h2>Article not found</h2>
+        <p>The article you're looking for doesn't exist or has been removed.</p>
+        <a href="/casino-insider/">← Back to home</a>
+      </div>
+    </div>`;
+}
+
+/* ── EVENT BINDING ── */
+function bindEvents(initialComments) {
+  // Language toggle
+  document.getElementById('langEN')?.addEventListener('click', () => switchLang('en'));
+  document.getElementById('langZH')?.addEventListener('click', () => switchLang('zh'));
+
+  // Copy URL
+  document.getElementById('copyUrlBtn')?.addEventListener('click', () => {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      const btn = document.getElementById('copyUrlBtn');
+      if (!btn) return;
+      btn.textContent = '✓ Copied!';
+      setTimeout(() => { btn.textContent = '⎘ Copy Link'; }, 2000);
+    });
+  });
+
+  // Comment voting
+  document.getElementById('commentsList')?.addEventListener('click', async e => {
+    const btn = e.target.closest('.comment-vote-btn');
+    if (!btn || btn.disabled) return;
+    btn.disabled = true;
+    const id    = btn.dataset.id;
+    const field = btn.dataset.field;
+    const { data } = await supabase.from(COMMENTS_TABLE).select(field).eq('id', id).single();
+    if (!data) return;
+    const newVal = (data[field] || 0) + 1;
+    await supabase.from(COMMENTS_TABLE).update({ [field]: newVal }).eq('id', id);
+    btn.textContent = (field === 'likes' ? '👍 ' : '👎 ') + newVal;
+  });
+
+  // Star selector
+  const starSelector = document.getElementById('starSelector');
+  if (starSelector) {
+    const opts = starSelector.querySelectorAll('.star-opt');
+    starSelector.addEventListener('mouseover', e => {
+      const val = Number(e.target.dataset.val);
+      if (!val) return;
+      opts.forEach(s => s.classList.toggle('lit', Number(s.dataset.val) <= val));
+    });
+    starSelector.addEventListener('mouseleave', () => {
+      opts.forEach(s => s.classList.toggle('lit', Number(s.dataset.val) <= selectedRating));
+    });
+    starSelector.addEventListener('click', e => {
+      const val = Number(e.target.dataset.val);
+      if (!val) return;
+      selectedRating = val;
+      opts.forEach(s => s.classList.toggle('lit', Number(s.dataset.val) <= selectedRating));
+    });
+  }
+
+  // Comment form
+  document.getElementById('commentForm')?.addEventListener('submit', async e => {
+    e.preventDefault();
+    const name    = document.getElementById('commentName').value.trim();
+    const country = document.getElementById('commentCountry').value;
+    const comment = document.getElementById('commentText').value.trim();
+    const msg     = document.getElementById('formMsg');
+    const submit  = e.target.querySelector('.form-submit');
+
+    if (!name || !comment) { msg.textContent = 'Name and comment are required.'; return; }
+
+    submit.disabled    = true;
+    submit.textContent = 'Submitting…';
+    msg.textContent    = '';
+
+    const { error } = await supabase.from(COMMENTS_TABLE).insert({
+      article_id: article.id,
+      name,
+      country,
+      rating: selectedRating || null,
+      comment,
+      likes: 0,
+      dislikes: 0,
+    });
+
+    if (error) {
+      msg.textContent    = 'Something went wrong. Please try again.';
+      submit.disabled    = false;
+      submit.textContent = 'Submit Comment';
+      return;
+    }
+
+    msg.textContent    = 'Comment submitted — thank you!';
+    e.target.reset();
+    selectedRating = 0;
+    document.querySelectorAll('.star-opt').forEach(s => s.classList.remove('lit'));
+    submit.disabled    = false;
+    submit.textContent = 'Submit Comment';
+
+    // Refresh comment list
+    const { data: fresh } = await supabase
+      .from(COMMENTS_TABLE)
+      .select('*')
+      .eq('article_id', article.id)
+      .order('created_at', { ascending: false });
+
+    const list = document.getElementById('commentsList');
+    if (list) {
+      list.innerHTML = (fresh && fresh.length)
+        ? fresh.map(buildCommentCard).join('')
+        : `<p class="comments-empty">Be the first to leave a comment.</p>`;
+    }
+  });
+}
+
+function switchLang(lang) {
+  if (currentLang === lang) return;
+  currentLang = lang;
+  document.getElementById('langEN')?.classList.toggle('active', lang === 'en');
+  document.getElementById('langZH')?.classList.toggle('active', lang === 'zh');
+  const contentEl = document.getElementById('articleContent');
+  if (contentEl) contentEl.innerHTML = parseMarkdown(getContent());
+  const titleEl = document.getElementById('heroTitle');
+  if (titleEl) titleEl.textContent = getTitle();
+}
+
+// Modal
+const modal    = document.getElementById('fullAccessModal');
+const closeBtn = document.getElementById('modalCloseBtn');
+document.getElementById('fullAccessBtn')?.addEventListener('click', () => modal.style.display = 'flex');
+closeBtn?.addEventListener('click', () => modal.style.display = 'none');
+modal?.addEventListener('click', e => { if (e.target === modal) modal.style.display = 'none'; });
+
+init();
+</script>
+
+<script type="module" src="assets/js/main.js"></script>
+</body>
+</html>

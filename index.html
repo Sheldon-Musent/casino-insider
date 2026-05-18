@@ -593,7 +593,7 @@
     if (name)    name.textContent    = r.platform_name || r.title || '';
     if (tagline) tagline.textContent = r.excerpt        || '';
     if (verdict) verdict.textContent = r.body           || r.excerpt || '';
-    if (btn)     btn.href            = `/casino-insider/reviews/${r.slug}`;
+    if (btn)     btn.href            = `/casino-insider/article.html?slug=${r.slug}`;
   }
 
   document.querySelectorAll('.trending-tab').forEach(btn => {
